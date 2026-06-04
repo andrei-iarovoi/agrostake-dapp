@@ -43,10 +43,11 @@ contract AgroToken is ERC20, Ownable {
     /// @dev Can only be called once per cooldown period
     function faucet() external {
         if (
+            lastFaucetClaim[msg.sender] != 0 &&
             block.timestamp <
             lastFaucetClaim[msg.sender] + FAUCET_COOLDOWN
-        ) {
-            revert FaucetCooldownActive();
+            ) {
+        revert FaucetCooldownActive();
         }
 
         lastFaucetClaim[msg.sender] = block.timestamp;
