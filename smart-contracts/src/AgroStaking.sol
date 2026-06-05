@@ -126,4 +126,24 @@ contract AgroStaking is Ownable, Pausable, ReentrancyGuard {
 
     return userStake.unclaimedRewards + newRewards;
   }
+  /// @notice Claims accumulated staking rewards
+  function claimRewards() external whenNotPaused nonReentrant {
+    StakeInfo storage userStake = stakes[msg.sender];
+
+    _updateRewards(msg.sender);
+
+    uint256 reward = userStake.unclaimedRewards;
+
+    if (reward == 0) {
+      revert NoRewardsAvailable();
+    }
+
+    userStake.unclaimedRewards = 0;
+
+    userStake.rewardsClaimed += reward;
+
+    stakingToken.safeTransfer(msg.sender, reward);
+
+    emit RewardsClaimed(msg.sender, reward);
+  }
 }

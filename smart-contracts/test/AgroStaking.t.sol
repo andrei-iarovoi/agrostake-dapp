@@ -53,4 +53,41 @@ contract AgroStakingTest is Test {
 
     assertEq(token.balanceOf(address(staking)), amount);
   }
+
+  function test_UserCanClaimRewards() public {
+    uint256 stakeAmount = 1000 ether;
+    uint256 rewardPool = 100000 ether;
+
+    token.mint(owner, rewardPool);
+
+    token.approve(address(staking), rewardPool);
+
+    staking.fundRewardPool(rewardPool);
+
+    vm.startPrank(user);
+
+    token.approve(address(staking), stakeAmount);
+
+    staking.stake(stakeAmount);
+
+    vm.warp(block.timestamp + 30 days);
+
+    uint256 balanceBefore = token.balanceOf(user);
+
+    staking.claimRewards();
+
+    uint256 balanceAfter = token.balanceOf(user);
+
+    vm.stopPrank();
+
+    assertGt(balanceAfter, balanceBefore);
+  }
+
+  function test_ClaimWithoutRewardsReverts() public {
+    vm.prank(user);
+
+    vm.expectRevert(AgroStaking.NoRewardsAvailable.selector);
+
+    staking.claimRewards();
+  }
 }
