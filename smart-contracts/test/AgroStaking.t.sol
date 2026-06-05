@@ -41,4 +41,16 @@ contract AgroStakingTest is Test {
 
     assertApproxEqAbs(rewards, expectedRewards, 1);
   }
+
+  function test_OwnerCanFundRewardPool() public {
+    uint256 amount = 100_000 ether;
+
+    token.mint(owner, amount);
+
+    token.approve(address(staking), amount);
+
+    staking.fundRewardPool(amount);
+
+    assertEq(token.balanceOf(address(staking)), amount);
+  }
 }

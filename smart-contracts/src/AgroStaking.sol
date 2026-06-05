@@ -50,6 +50,7 @@ contract AgroStaking is Ownable, Pausable, ReentrancyGuard {
   event Unstaked(address indexed user, uint256 amount);
   event RewardsClaimed(address indexed user, uint256 reward);
   event EmergencyWithdraw(address indexed user, uint256 amount);
+  event RewardPoolFunded(address indexed funder, uint256 amount);
 
   /// @param tokenAddress AGRO token address
   constructor(address tokenAddress, address initialOwner) Ownable(initialOwner) {
@@ -83,6 +84,18 @@ contract AgroStaking is Ownable, Pausable, ReentrancyGuard {
     totalStaked += amount;
 
     emit Staked(msg.sender, amount);
+  }
+
+  /// @notice Funds the reward pool with AGRO tokens
+  /// @param amount Amount of tokens to transfer
+  function fundRewardPool(uint256 amount) external onlyOwner {
+    if (amount == 0) {
+      revert AmountMustBeGreaterThanZero();
+    }
+
+    stakingToken.safeTransferFrom(msg.sender, address(this), amount);
+
+    emit RewardPoolFunded(msg.sender, amount);
   }
 
   /// @notice Updates user's accumulated rewards
