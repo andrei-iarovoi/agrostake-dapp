@@ -90,4 +90,90 @@ contract AgroStakingTest is Test {
 
     staking.claimRewards();
   }
+
+  function _stakeAsUser(uint256 amount) internal {
+    vm.startPrank(user);
+
+    token.approve(address(staking), amount);
+
+    staking.stake(amount);
+
+    vm.stopPrank();
+  }
+
+  function test_PartialUnstake() public {
+    uint256 amount = 1000 ether;
+
+    _stakeAsUser(amount);
+
+    vm.warp(block.timestamp + 8 days);
+
+    vm.prank(user);
+
+    staking.unstake(500 ether);
+
+    AgroStaking.StakeInfo memory info = staking.getStakeInfo(user);
+
+    assertEq(info.amount, 500 ether);
+
+    assertEq(staking.totalStaked(), 500 ether);
+  }
+
+  function test_FullUnstakeRemovesStaker() public {
+    _stakeAsUser(1000 ether);
+
+    vm.warp(block.timestamp + 8 days);
+
+    vm.prank(user);
+
+    staking.unstake(1000 ether);
+
+    AgroStaking.StakeInfo memory info = staking.getStakeInfo(user);
+
+    assertEq(info.amount, 0);
+
+    assertEq(staking.totalStakers(), 0);
+  }
+
+  function test_UnstakeBeforeLockPeriodReverts() public {
+    _stakeAsUser(1000 ether);
+
+    vm.warp(block.timestamp + 2 days);
+
+    vm.startPrank(user);
+
+    vm.expectRevert(AgroStaking.LockPeriodNotExpired.selector);
+
+    staking.unstake(100 ether);
+
+    vm.stopPrank();
+  }
+
+  function test_UnstakeMoreThanStakedReverts() public {
+    _stakeAsUser(1000 ether);
+
+    vm.warp(block.timestamp + 8 days);
+
+    vm.startPrank(user);
+
+    vm.expectRevert(AgroStaking.InsufficientStake.selector);
+
+    staking.unstake(2000 ether);
+
+    vm.stopPrank();
+  }
+
+  function test_UnstakePreservesRewards() public {
+    _stakeAsUser(1000 ether);
+
+    vm.warp(block.timestamp + 30 days);
+
+    vm.prank(user);
+
+    staking.unstake(500 ether);
+
+    uint256 rewards = staking.pendingRewards(user);
+
+    assertGt(rewards, 0);
+  }
 }

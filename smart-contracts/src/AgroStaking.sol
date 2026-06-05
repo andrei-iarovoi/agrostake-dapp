@@ -57,6 +57,12 @@ contract AgroStaking is Ownable, Pausable, ReentrancyGuard {
     stakingToken = IERC20(tokenAddress);
   }
 
+  /// @notice Returns staking information for a user
+  /// @param user Address of the staker
+  function getStakeInfo(address user) external view returns (StakeInfo memory) {
+    return stakes[user];
+  }
+
   /// @notice Stake AGRO tokens into the protocol
   /// @param amount Amount of tokens to stake
   function stake(uint256 amount) external whenNotPaused nonReentrant {
