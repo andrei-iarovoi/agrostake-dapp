@@ -146,4 +146,36 @@ contract AgroStaking is Ownable, Pausable, ReentrancyGuard {
 
     emit RewardsClaimed(msg.sender, reward);
   }
+
+  /// @notice Withdraw staked AGRO tokens
+  /// @param amount Amount of tokens to unstake
+  function unstake(uint256 amount) external whenNotPaused nonReentrant {
+    if (amount == 0) {
+      revert AmountMustBeGreaterThanZero();
+    }
+
+    StakeInfo storage userStake = stakes[msg.sender];
+
+    if (userStake.amount < amount) {
+      revert InsufficientStake();
+    }
+
+    if (block.timestamp < userStake.stakeTimestamp + LOCK_PERIOD) {
+      revert LockPeriodNotExpired();
+    }
+
+    _updateRewards(msg.sender);
+
+    userStake.amount -= amount;
+
+    totalStaked -= amount;
+
+    if (userStake.amount == 0) {
+      totalStakers--;
+    }
+
+    stakingToken.safeTransfer(msg.sender, amount);
+
+    emit Unstaked(msg.sender, amount);
+  }
 }
