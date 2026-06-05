@@ -45,6 +45,7 @@ contract AgroStaking is Ownable, Pausable, ReentrancyGuard {
   error InsufficientStake();
   error LockPeriodNotExpired();
   error NoRewardsAvailable();
+  error NoActiveStake();
 
   event Staked(address indexed user, uint256 amount);
   event Unstaked(address indexed user, uint256 amount);
@@ -183,5 +184,31 @@ contract AgroStaking is Ownable, Pausable, ReentrancyGuard {
     stakingToken.safeTransfer(msg.sender, amount);
 
     emit Unstaked(msg.sender, amount);
+  }
+
+  /// @notice Emergency withdrawal of staked tokens without rewards
+  /// @dev Ignores lock period and forfeits all accumulated rewards
+  function emergencyWithdraw() external whenNotPaused nonReentrant {
+    StakeInfo storage userStake = stakes[msg.sender];
+
+    uint256 amount = userStake.amount;
+
+    if (amount == 0) {
+      revert NoActiveStake();
+    }
+
+    // Update protocol statistics
+    totalStaked -= amount;
+    totalStakers--;
+
+    // Reset user position
+    userStake.amount = 0;
+    userStake.unclaimedRewards = 0;
+    userStake.lastRewardTimestamp = 0;
+    userStake.stakeTimestamp = 0;
+
+    stakingToken.safeTransfer(msg.sender, amount);
+
+    emit EmergencyWithdraw(msg.sender, amount);
   }
 }
