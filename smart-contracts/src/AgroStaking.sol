@@ -2,6 +2,7 @@
 pragma solidity ^0.8.30;
 
 import {IERC20} from '@openzeppelin/contracts/token/ERC20/IERC20.sol';
+import {SafeERC20} from '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
 import {Ownable} from '@openzeppelin/contracts/access/Ownable.sol';
 import {Pausable} from '@openzeppelin/contracts/utils/Pausable.sol';
 import {ReentrancyGuard} from '@openzeppelin/contracts/utils/ReentrancyGuard.sol';
@@ -10,6 +11,8 @@ import {ReentrancyGuard} from '@openzeppelin/contracts/utils/ReentrancyGuard.sol
 /// @author Andrei Iarovoi
 /// @notice Staking contract for AGRO token
 contract AgroStaking is Ownable, Pausable, ReentrancyGuard {
+  using SafeERC20 for IERC20;
+
   /// @notice Annual percentage rate
   uint256 public constant APR = 12;
 
@@ -66,7 +69,7 @@ contract AgroStaking is Ownable, Pausable, ReentrancyGuard {
 
     bool isNewStaker = userStake.amount == 0;
 
-    stakingToken.transferFrom(msg.sender, address(this), amount);
+    stakingToken.safeTransferFrom(msg.sender, address(this), amount);
 
     userStake.amount += amount;
 
@@ -85,6 +88,29 @@ contract AgroStaking is Ownable, Pausable, ReentrancyGuard {
   /// @notice Updates user's accumulated rewards
   /// @param user Address of the staker
   function _updateRewards(address user) private {
-    user;
+    StakeInfo storage userStake = stakes[user];
+
+    uint256 rewards = pendingRewards(user);
+
+    userStake.unclaimedRewards = rewards;
+
+    userStake.lastRewardTimestamp = block.timestamp;
+  }
+
+  /// @notice Returns the total pending rewards for a user
+  /// @param user Address of the staker
+  /// @return Total rewards available for claiming
+  function pendingRewards(address user) public view returns (uint256) {
+    StakeInfo storage userStake = stakes[user];
+
+    if (userStake.amount == 0) {
+      return userStake.unclaimedRewards;
+    }
+
+    uint256 elapsedTime = block.timestamp - userStake.lastRewardTimestamp;
+
+    uint256 newRewards = (userStake.amount * APR * elapsedTime) / (BASIS_POINTS * YEAR_IN_SECONDS);
+
+    return userStake.unclaimedRewards + newRewards;
   }
 }
