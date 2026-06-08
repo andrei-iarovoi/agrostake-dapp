@@ -1,5 +1,5 @@
-Contract: AgroStaking
-Contract Address: 0xa4ffdaC4087dc38571f0d7160dF24e68D8aaA8Ea
-
 Contract: AgroToken
 Contract Address: 0x58Ad8606d0e6277994Dfc79f7B430B7F2d114318
+
+Contract: AgroStaking
+Contract Address: 0xa4ffdaC4087dc38571f0d7160dF24e68D8aaA8Ea

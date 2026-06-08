@@ -9,12 +9,13 @@ import {AgroStaking} from '../src/AgroStaking.sol';
 contract Deploy is Script {
   function run() external {
     uint256 deployerPrivateKey = vm.envUint('PRIVATE_KEY');
+    address deployer = vm.addr(deployerPrivateKey);
 
     vm.startBroadcast(deployerPrivateKey);
 
-    AgroToken token = new AgroToken(msg.sender);
+    AgroToken token = new AgroToken(deployer);
 
-    AgroStaking staking = new AgroStaking(address(token), msg.sender);
+    AgroStaking staking = new AgroStaking(address(token), deployer);
 
     vm.stopBroadcast();
 
