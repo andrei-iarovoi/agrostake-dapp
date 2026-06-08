@@ -1,5 +1,12 @@
-Contract: AgroToken
-Contract Address: 0x58Ad8606d0e6277994Dfc79f7B430B7F2d114318
+## Sepolia Deployment
 
-Contract: AgroStaking
-Contract Address: 0xa4ffdaC4087dc38571f0d7160dF24e68D8aaA8Ea
+AgroToken:
+Contract Address: 0x4F268d1f3f616D7BD5727E1ef996996B530e5527
+
+AgroStaking:
+0x1544ccC232A4a0D183C07B86E8EAe5A35419A831
+
+Verified Contracts:
+AgroToken: https://sepolia.etherscan.io/address/0x4F268d1f3f616D7BD5727E1ef996996B530e5527#code
+
+AgroStaking: https://sepolia.etherscan.io/address/0x1544ccC232A4a0D183C07B86E8EAe5A35419A831#code
