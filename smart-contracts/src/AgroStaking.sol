@@ -211,4 +211,14 @@ contract AgroStaking is Ownable, Pausable, ReentrancyGuard {
 
     emit EmergencyWithdraw(msg.sender, amount);
   }
+
+  /// @notice Pause protocol operations
+  function pause() external onlyOwner {
+    _pause();
+  }
+
+  /// @notice Resume protocol operations
+  function unpause() external onlyOwner {
+    _unpause();
+  }
 }

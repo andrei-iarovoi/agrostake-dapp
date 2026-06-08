@@ -244,4 +244,42 @@ contract AgroStakingTest is Test {
 
     assertEq(staking.totalStakers(), 0);
   }
+
+  function test_NonOwnerCannotPause() public {
+    vm.prank(user);
+
+    vm.expectRevert();
+
+    staking.pause();
+  }
+
+  function test_OwnerCanPause() public {
+    staking.pause();
+
+    assertTrue(staking.paused());
+  }
+
+  function test_StakeRevertsWhenPaused() public {
+    staking.pause();
+
+    vm.startPrank(user);
+
+    token.approve(address(staking), 1000 ether);
+
+    vm.expectRevert();
+
+    staking.stake(1000 ether);
+
+    vm.stopPrank();
+  }
+
+  function test_UnpauseRestoresFunctionality() public {
+    staking.pause();
+
+    staking.unpause();
+
+    _stakeAsUser(1000 ether);
+
+    assertEq(staking.totalStaked(), 1000 ether);
+  }
 }
