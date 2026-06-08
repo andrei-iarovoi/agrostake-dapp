@@ -282,4 +282,26 @@ contract AgroStakingTest is Test {
 
     assertEq(staking.totalStaked(), 1000 ether);
   }
+
+  function test_GetProtocolStats() public {
+    uint256 rewardPool = 100_000 ether;
+
+    token.mint(owner, rewardPool);
+
+    token.approve(address(staking), rewardPool);
+
+    staking.fundRewardPool(rewardPool);
+
+    _stakeAsUser(1000 ether);
+
+    AgroStaking.ProtocolStats memory stats = staking.getProtocolStats();
+
+    assertEq(stats.totalStaked, 1000 ether);
+
+    assertEq(stats.totalStakers, 1);
+
+    assertEq(stats.apr, staking.APR());
+
+    assertEq(stats.lockPeriod, staking.LOCK_PERIOD());
+  }
 }

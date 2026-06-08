@@ -36,6 +36,14 @@ contract AgroStaking is Ownable, Pausable, ReentrancyGuard {
     uint256 stakeTimestamp;
   }
 
+  struct ProtocolStats {
+    uint256 totalStaked;
+    uint256 totalStakers;
+    uint256 apr;
+    uint256 lockPeriod;
+    uint256 rewardPoolBalance;
+  }
+
   mapping(address => StakeInfo) public stakes;
 
   uint256 public totalStaked;
@@ -220,5 +228,17 @@ contract AgroStaking is Ownable, Pausable, ReentrancyGuard {
   /// @notice Resume protocol operations
   function unpause() external onlyOwner {
     _unpause();
+  }
+
+  /// @notice Returns protocol statistics
+  function getProtocolStats() external view returns (ProtocolStats memory) {
+    return
+      ProtocolStats({
+        totalStaked: totalStaked,
+        totalStakers: totalStakers,
+        apr: APR,
+        lockPeriod: LOCK_PERIOD,
+        rewardPoolBalance: stakingToken.balanceOf(address(this))
+      });
   }
 }
