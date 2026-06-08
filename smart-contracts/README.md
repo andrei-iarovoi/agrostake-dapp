@@ -1,2 +1,5 @@
-AgroToken: 0xD036da5a20c2aDDBCbEcF455EBc7Bed26Fb8A2F5
-AgroStaking: 0x66629D0829647f946d31b5E319c55fE4befCFae9
+Contract: AgroStaking
+Contract Address: 0xa4ffdaC4087dc38571f0d7160dF24e68D8aaA8Ea
+
+Contract: AgroToken
+Contract Address: 0x58Ad8606d0e6277994Dfc79f7B430B7F2d114318
