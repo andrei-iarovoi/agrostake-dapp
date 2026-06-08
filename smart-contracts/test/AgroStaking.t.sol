@@ -176,4 +176,72 @@ contract AgroStakingTest is Test {
 
     assertGt(rewards, 0);
   }
+
+  function test_EmergencyWithdraw() public {
+    uint256 stakeAmount = 1000 ether;
+
+    _stakeAsUser(stakeAmount);
+
+    uint256 balanceBefore = token.balanceOf(user);
+
+    vm.prank(user);
+
+    staking.emergencyWithdraw();
+
+    uint256 balanceAfter = token.balanceOf(user);
+
+    AgroStaking.StakeInfo memory info = staking.getStakeInfo(user);
+
+    assertEq(info.amount, 0);
+
+    assertEq(balanceAfter, balanceBefore + stakeAmount);
+
+    assertEq(staking.totalStaked(), 0);
+  }
+
+  function test_EmergencyWithdrawIgnoresLockPeriod() public {
+    _stakeAsUser(1000 ether);
+
+    vm.warp(block.timestamp + 1 days);
+
+    vm.prank(user);
+
+    staking.emergencyWithdraw();
+
+    AgroStaking.StakeInfo memory info = staking.getStakeInfo(user);
+
+    assertEq(info.amount, 0);
+  }
+
+  function test_EmergencyWithdrawBurnsRewards() public {
+    _stakeAsUser(1000 ether);
+
+    vm.warp(block.timestamp + 30 days);
+
+    vm.prank(user);
+
+    staking.emergencyWithdraw();
+
+    uint256 rewards = staking.pendingRewards(user);
+
+    assertEq(rewards, 0);
+  }
+
+  function test_EmergencyWithdrawWithoutStakeReverts() public {
+    vm.prank(user);
+
+    vm.expectRevert(AgroStaking.NoActiveStake.selector);
+
+    staking.emergencyWithdraw();
+  }
+
+  function test_EmergencyWithdrawRemovesStaker() public {
+    _stakeAsUser(1000 ether);
+
+    vm.prank(user);
+
+    staking.emergencyWithdraw();
+
+    assertEq(staking.totalStakers(), 0);
+  }
 }
