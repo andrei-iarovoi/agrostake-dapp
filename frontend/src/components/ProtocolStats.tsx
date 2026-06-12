@@ -22,13 +22,27 @@ export function ProtocolStats() {
     <div>
       <h2>Protocol Stats</h2>
 
-      <p>APR: {stats?.apr.toString()}%</p>
+      <div className="stats-grid">
+        <div className="stat-card">
+          <span>APR</span>
+          <strong>{stats?.apr.toString()}%</strong>
+        </div>
 
-      <p>TVL: {stats ? Number(stats.totalStaked) / 1e18 : 0} AGRO</p>
+        <div className="stat-card">
+          <span>TVL</span>
+          <strong>{stats ? Number(stats.totalStaked) / 1e18 : 0} AGRO</strong>
+        </div>
 
-      <p>Total Stakers: {stats?.totalStakers.toString()}</p>
+        <div className="stat-card">
+          <span>Total Stakers</span>
+          <strong>{stats?.totalStakers.toString()}</strong>
+        </div>
 
-      <p>Reward Pool: {stats ? Number(stats.rewardPoolBalance) / 1e18 : 0} AGRO</p>
+        <div className="stat-card">
+          <span>Reward Pool</span>
+          <strong>{stats ? Number(stats.rewardPoolBalance) / 1e18 : 0} AGRO</strong>
+        </div>
+      </div>
     </div>
   );
 }

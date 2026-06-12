@@ -57,12 +57,6 @@ export function UserStats() {
       <p>Claimed Rewards: {stakeInfo ? formatEther(stakeInfo.rewardsClaimed) : '0'} AGRO</p>
 
       <p>Pending Rewards: {pendingRewards ? formatEther(pendingRewards) : '0'} AGRO</p>
-
-      <p>Stake Timestamp: {stakeInfo?.stakeTimestamp.toString()}</p>
-
-      <p>
-        Unlock Timestamp: {stakeInfo ? (Number(stakeInfo.stakeTimestamp) + 604800).toString() : '0'}
-      </p>
     </div>
   );
 }

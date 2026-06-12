@@ -5,26 +5,39 @@ import { Faucet } from './components/Faucet';
 import { StakeForm } from './components/StakeForm';
 import { ClaimRewards } from './components/ClaimRewards';
 import { UnstakeForm } from './components/UnstakeForm';
+import { EmergencyWithdraw } from './components/EmergencyWithdraw';
 
 function App() {
   return (
-    <>
-      <h1>AgroStake</h1>
+    <main className="app">
+      <header className="header">
+        <h1>AgroStake</h1>
 
-      <ConnectWallet />
+        <ConnectWallet />
+      </header>
 
-      <ProtocolStats />
+      <section className="section">
+        <ProtocolStats />
+      </section>
 
-      <UserStats />
+      <section className="section">
+        <UserStats />
+      </section>
 
-      <Faucet />
+      <section className="section">
+        <h2>Actions</h2>
 
-      <StakeForm />
+        <Faucet />
 
-      <ClaimRewards />
+        <StakeForm />
 
-      <UnstakeForm />
-    </>
+        <ClaimRewards />
+
+        <UnstakeForm />
+
+        <EmergencyWithdraw />
+      </section>
+    </main>
   );
 }
 
