@@ -6,6 +6,7 @@ import { StakeForm } from './components/StakeForm';
 import { ClaimRewards } from './components/ClaimRewards';
 import { UnstakeForm } from './components/UnstakeForm';
 import { EmergencyWithdraw } from './components/EmergencyWithdraw';
+import { OwnerPanel } from './components/OwnerPanel';
 
 function App() {
   return (
@@ -36,6 +37,8 @@ function App() {
         <UnstakeForm />
 
         <EmergencyWithdraw />
+
+        <OwnerPanel />
       </section>
     </main>
   );
