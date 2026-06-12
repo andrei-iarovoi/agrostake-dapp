@@ -2,6 +2,7 @@ import { ConnectWallet } from './components/ConnectWallet';
 import { ProtocolStats } from './components/ProtocolStats';
 import { UserStats } from './components/UserStats';
 import { Faucet } from './components/Faucet';
+import { StakeForm } from './components/StakeForm';
 
 function App() {
   return (
@@ -15,6 +16,8 @@ function App() {
       <UserStats />
 
       <Faucet />
+
+      <StakeForm />
     </>
   );
 }
