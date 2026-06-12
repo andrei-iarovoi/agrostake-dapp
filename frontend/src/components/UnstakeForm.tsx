@@ -1,12 +1,12 @@
 import { useState } from 'react';
-
 import { parseEther } from 'viem';
-
 import { useWriteContract } from 'wagmi';
 
 import { AGRO_STAKING_ADDRESS } from '../contracts/addresses';
-
 import { agroStakingAbi } from '../contracts/agroStaking';
+
+import { Button } from './ui/Button';
+import { Input } from './ui/Input';
 
 export function UnstakeForm() {
   const [amount, setAmount] = useState('');
@@ -27,17 +27,17 @@ export function UnstakeForm() {
   }
 
   return (
-    <div>
-      <h2>Unstake Tokens</h2>
+    <div className="space-y-4">
+      <h3 className="text-xl font-semibold">Unstake Tokens</h3>
 
-      <input
+      <Input
         type="number"
         value={amount}
+        placeholder="Enter amount"
         onChange={(e) => setAmount(e.target.value)}
-        placeholder="Amount"
       />
 
-      <button onClick={handleUnstake}>Unstake</button>
+      <Button onClick={handleUnstake}>Unstake</Button>
     </div>
   );
 }

@@ -1,8 +1,9 @@
 import { useWriteContract } from 'wagmi';
 
 import { AGRO_STAKING_ADDRESS } from '../contracts/addresses';
-
 import { agroStakingAbi } from '../contracts/agroStaking';
+
+import { Button } from './ui/Button';
 
 export function ClaimRewards() {
   const { writeContract } = useWriteContract();
@@ -18,10 +19,10 @@ export function ClaimRewards() {
   }
 
   return (
-    <div>
-      <h2>Rewards</h2>
+    <div className="space-y-4">
+      <h3 className="text-xl font-semibold">Rewards</h3>
 
-      <button onClick={handleClaimRewards}>Claim Rewards</button>
+      <Button onClick={handleClaimRewards}>Claim Rewards</Button>
     </div>
   );
 }

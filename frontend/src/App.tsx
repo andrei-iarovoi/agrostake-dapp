@@ -7,17 +7,31 @@ import { ClaimRewards } from './components/ClaimRewards';
 import { UnstakeForm } from './components/UnstakeForm';
 import { EmergencyWithdraw } from './components/EmergencyWithdraw';
 import { OwnerPanel } from './components/OwnerPanel';
+import agroBg from './assets/agro-bg.png';
 
 function App() {
   return (
     <main className="min-h-screen bg-slate-950 text-white">
       <div className="mx-auto max-w-7xl px-6 py-10">
-        <header className="mb-10 flex flex-col items-center gap-6">
-          <h1 className="text-5xl font-bold">🌾 AgroStake</h1>
+        <header className="relative overflow-hidden rounded-3xl mb-10">
+          <img
+            src={agroBg}
+            alt="Agro background"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
 
-          <p className="text-slate-400">Stake AGRO tokens and earn rewards</p>
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-slate-950/80" />
 
-          <ConnectWallet />
+          <div className="relative z-10 flex flex-col items-center gap-6 px-8 py-20">
+            <h1 className="text-6xl font-bold">🌾 AgroStake</h1>
+
+            <p className="max-w-xl text-center text-slate-300">
+              Decentralized agricultural staking protocol Stake AGRO tokens Earn rewards Support the
+              AgroVerse ecosystem
+            </p>
+
+            <ConnectWallet />
+          </div>
         </header>
 
         <section className="mb-6 rounded-2xl border border-slate-800 bg-slate-900 p-6">

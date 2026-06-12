@@ -1,28 +1,18 @@
-import { useState, useEffect } from 'react';
-
+import { useState } from 'react';
 import { parseEther } from 'viem';
-
-import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
+import { useWriteContract } from 'wagmi';
 
 import { AGRO_TOKEN_ADDRESS, AGRO_STAKING_ADDRESS } from '../contracts/addresses';
-
 import { agroTokenAbi } from '../contracts/agroToken';
 import { agroStakingAbi } from '../contracts/agroStaking';
+
+import { Button } from './ui/Button';
+import { Input } from './ui/Input';
 
 export function StakeForm() {
   const [amount, setAmount] = useState('');
 
-  const { data: hash, writeContract } = useWriteContract();
-
-  const { isSuccess } = useWaitForTransactionReceipt({
-    hash,
-  });
-
-  useEffect(() => {
-    if (isSuccess) {
-      console.log('Stake transaction confirmed');
-    }
-  }, [isSuccess]);
+  const { writeContract } = useWriteContract();
 
   function handleApprove() {
     if (!amount) return;
@@ -51,17 +41,21 @@ export function StakeForm() {
   }
 
   return (
-    <div>
-      <h2>Stake Tokens</h2>
+    <div className="space-y-4">
+      <h3 className="text-xl font-semibold">Stake Tokens</h3>
 
-      <input
+      <Input
         type="number"
         value={amount}
+        placeholder="Enter amount"
         onChange={(e) => setAmount(e.target.value)}
-        placeholder="Amount"
       />
-      <button onClick={handleApprove}>Approve</button>
-      <button onClick={handleStake}>Stake</button>
+
+      <div className="space-y-2">
+        <Button onClick={handleApprove}>Approve</Button>
+
+        <Button onClick={handleStake}>Stake</Button>
+      </div>
     </div>
   );
 }
