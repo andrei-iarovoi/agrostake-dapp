@@ -1,5 +1,4 @@
 import { useAccount, useReadContract } from 'wagmi';
-import { formatEther } from 'viem';
 
 import { AGRO_STAKING_ADDRESS, AGRO_TOKEN_ADDRESS } from '../contracts/addresses';
 
@@ -52,13 +51,27 @@ export function UserStats() {
     <div>
       <h2>Your Position</h2>
 
-      <p>Wallet Balance: {balance ? formatTokenAmount(balance) : '0'} AGRO</p>
+      <div className="stats-grid">
+        <div className="stat-card">
+          <span>Wallet Balance</span>
+          <strong>{balance ? formatTokenAmount(balance) : '0'} AGRO</strong>
+        </div>
 
-      <p>Staked Amount: {stakeInfo ? formatTokenAmount(stakeInfo.amount) : '0'} AGRO</p>
+        <div className="stat-card">
+          <span>Staked Amount</span>
+          <strong>{stakeInfo ? formatTokenAmount(stakeInfo.amount) : '0'} AGRO</strong>
+        </div>
 
-      <p>Claimed Rewards: {stakeInfo ? formatTokenAmount(stakeInfo.rewardsClaimed) : '0'} AGRO</p>
+        <div className="stat-card">
+          <span>Claimed Rewards</span>
+          <strong>{stakeInfo ? formatTokenAmount(stakeInfo.rewardsClaimed) : '0'} AGRO</strong>
+        </div>
 
-      <p>Pending Rewards: {pendingRewards ? formatTokenAmount(pendingRewards) : '0'} AGRO</p>
+        <div className="stat-card">
+          <span>Pending Rewards</span>
+          <strong>{pendingRewards ? formatTokenAmount(pendingRewards) : '0'} AGRO</strong>
+        </div>
+      </div>
     </div>
   );
 }
