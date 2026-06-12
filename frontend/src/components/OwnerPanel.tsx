@@ -8,6 +8,8 @@ import { agroTokenAbi } from '../contracts/agroToken';
 
 export function OwnerPanel() {
   const [amount, setAmount] = useState('');
+  const [mintAddress, setMintAddress] = useState('');
+  const [mintAmount, setMintAmount] = useState('');
 
   const { writeContract } = useWriteContract();
 
@@ -53,6 +55,21 @@ export function OwnerPanel() {
     });
   }
 
+  function handleMint() {
+    if (!mintAddress || !mintAmount) {
+      return;
+    }
+
+    writeContract({
+      account: undefined,
+      chain: undefined,
+      address: AGRO_TOKEN_ADDRESS,
+      abi: agroTokenAbi,
+      functionName: 'mint',
+      args: [mintAddress as `0x${string}`, parseEther(mintAmount)],
+    });
+  }
+
   return (
     <div>
       <h2>Owner Panel</h2>
@@ -67,6 +84,24 @@ export function OwnerPanel() {
       />
       <button onClick={handleApprovePool}>Approve Reward Pool</button>
       <button onClick={handleFundPool}>Fund Reward Pool</button>
+
+      <h3>Mint Tokens</h3>
+
+      <input
+        type="text"
+        value={mintAddress}
+        onChange={(e) => setMintAddress(e.target.value)}
+        placeholder="Recipient Address"
+      />
+
+      <input
+        type="number"
+        value={mintAmount}
+        onChange={(e) => setMintAmount(e.target.value)}
+        placeholder="Amount"
+      />
+
+      <button onClick={handleMint}>Mint Tokens</button>
     </div>
   );
 }
