@@ -1,5 +1,6 @@
 import { ConnectWallet } from './components/ConnectWallet';
 import { ProtocolStats } from './components/ProtocolStats';
+import { UserStats } from './components/UserStats';
 
 function App() {
   return (
@@ -9,6 +10,8 @@ function App() {
       <ConnectWallet />
 
       <ProtocolStats />
+
+      <UserStats />
     </>
   );
 }
