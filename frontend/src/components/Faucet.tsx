@@ -1,10 +1,14 @@
-import { useWriteContract } from 'wagmi';
+import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 
 import { AGRO_TOKEN_ADDRESS } from '../contracts/addresses';
 import { agroTokenAbi } from '../contracts/agroToken';
 
 export function Faucet() {
-  const { writeContract } = useWriteContract();
+  const { data: hash, writeContract } = useWriteContract();
+
+  const { isSuccess } = useWaitForTransactionReceipt({
+    hash,
+  });
 
   function handleFaucet() {
     writeContract({

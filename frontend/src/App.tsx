@@ -4,6 +4,7 @@ import { UserStats } from './components/UserStats';
 import { Faucet } from './components/Faucet';
 import { StakeForm } from './components/StakeForm';
 import { ClaimRewards } from './components/ClaimRewards';
+import { UnstakeForm } from './components/UnstakeForm';
 
 function App() {
   return (
@@ -21,6 +22,8 @@ function App() {
       <StakeForm />
 
       <ClaimRewards />
+
+      <UnstakeForm />
     </>
   );
 }
