@@ -6,6 +6,8 @@ import { AGRO_STAKING_ADDRESS, AGRO_TOKEN_ADDRESS } from '../contracts/addresses
 import { agroStakingAbi } from '../contracts/agroStaking';
 import { agroTokenAbi } from '../contracts/agroToken';
 
+import { formatTokenAmount } from '../utils/format';
+
 export function UserStats() {
   const { address, isConnected } = useAccount();
 
@@ -50,13 +52,13 @@ export function UserStats() {
     <div>
       <h2>Your Position</h2>
 
-      <p>Wallet Balance: {balance ? formatEther(balance) : '0'} AGRO</p>
+      <p>Wallet Balance: {balance ? formatTokenAmount(balance) : '0'} AGRO</p>
 
-      <p>Staked Amount: {stakeInfo ? formatEther(stakeInfo.amount) : '0'} AGRO</p>
+      <p>Staked Amount: {stakeInfo ? formatTokenAmount(stakeInfo.amount) : '0'} AGRO</p>
 
-      <p>Claimed Rewards: {stakeInfo ? formatEther(stakeInfo.rewardsClaimed) : '0'} AGRO</p>
+      <p>Claimed Rewards: {stakeInfo ? formatTokenAmount(stakeInfo.rewardsClaimed) : '0'} AGRO</p>
 
-      <p>Pending Rewards: {pendingRewards ? formatEther(pendingRewards) : '0'} AGRO</p>
+      <p>Pending Rewards: {pendingRewards ? formatTokenAmount(pendingRewards) : '0'} AGRO</p>
     </div>
   );
 }

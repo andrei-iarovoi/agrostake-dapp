@@ -3,6 +3,8 @@ import { useReadContract } from 'wagmi';
 import { AGRO_STAKING_ADDRESS } from '../contracts/addresses';
 import { agroStakingAbi } from '../contracts/agroStaking';
 
+import { formatTokenAmount } from '../utils/format';
+
 export function ProtocolStats() {
   const { data: stats, isLoading } = useReadContract({
     address: AGRO_STAKING_ADDRESS,
@@ -30,7 +32,7 @@ export function ProtocolStats() {
 
         <div className="stat-card">
           <span>TVL</span>
-          <strong>{stats ? Number(stats.totalStaked) / 1e18 : 0} AGRO</strong>
+          <strong>{stats ? formatTokenAmount(stats.totalStaked) : 0} AGRO</strong>
         </div>
 
         <div className="stat-card">
@@ -40,7 +42,7 @@ export function ProtocolStats() {
 
         <div className="stat-card">
           <span>Reward Pool</span>
-          <strong>{stats ? Number(stats.rewardPoolBalance) / 1e18 : 0} AGRO</strong>
+          <strong>{stats ? formatTokenAmount(stats.rewardPoolBalance) : 0} AGRO</strong>
         </div>
       </div>
     </div>
