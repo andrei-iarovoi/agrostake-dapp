@@ -8,6 +8,10 @@ export function ProtocolStats() {
     address: AGRO_STAKING_ADDRESS,
     abi: agroStakingAbi,
     functionName: 'getProtocolStats',
+
+    query: {
+      refetchInterval: 5000,
+    },
   });
 
   if (isLoading) {

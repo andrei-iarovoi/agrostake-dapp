@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { parseEther } from 'viem';
 
-import { useWriteContract } from 'wagmi';
+import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 
 import { AGRO_TOKEN_ADDRESS, AGRO_STAKING_ADDRESS } from '../contracts/addresses';
 
@@ -11,7 +11,18 @@ import { agroStakingAbi } from '../contracts/agroStaking';
 
 export function StakeForm() {
   const [amount, setAmount] = useState('');
-  const { writeContract } = useWriteContract();
+
+  const { data: hash, writeContract } = useWriteContract();
+
+  const { isSuccess } = useWaitForTransactionReceipt({
+    hash,
+  });
+
+  useEffect(() => {
+    if (isSuccess) {
+      console.log('Stake transaction confirmed');
+    }
+  }, [isSuccess]);
 
   function handleApprove() {
     if (!amount) return;

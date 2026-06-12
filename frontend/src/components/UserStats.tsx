@@ -16,6 +16,7 @@ export function UserStats() {
     args: address ? [address] : undefined,
     query: {
       enabled: !!address,
+      refetchInterval: 5000,
     },
   });
 
@@ -26,6 +27,7 @@ export function UserStats() {
     args: address ? [address] : undefined,
     query: {
       enabled: !!address,
+      refetchInterval: 5000,
     },
   });
 
@@ -36,6 +38,7 @@ export function UserStats() {
     args: address ? [address] : undefined,
     query: {
       enabled: !!address,
+      refetchInterval: 5000,
     },
   });
 

@@ -10,6 +10,10 @@ export function Faucet() {
     hash,
   });
 
+  if (isSuccess) {
+    console.log('Transaction confirmed');
+  }
+
   function handleFaucet() {
     writeContract({
       account: undefined,
