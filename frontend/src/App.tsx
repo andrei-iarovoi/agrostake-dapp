@@ -3,6 +3,7 @@ import { ProtocolStats } from './components/ProtocolStats';
 import { UserStats } from './components/UserStats';
 import { Faucet } from './components/Faucet';
 import { StakeForm } from './components/StakeForm';
+import { ClaimRewards } from './components/ClaimRewards';
 
 function App() {
   return (
@@ -18,6 +19,8 @@ function App() {
       <Faucet />
 
       <StakeForm />
+
+      <ClaimRewards />
     </>
   );
 }

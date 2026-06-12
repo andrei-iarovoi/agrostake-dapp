@@ -10,9 +10,8 @@ import { agroTokenAbi } from '../contracts/agroToken';
 import { agroStakingAbi } from '../contracts/agroStaking';
 
 export function StakeForm() {
-  const { writeContract } = useWriteContract();
-
   const [amount, setAmount] = useState('');
+  const { writeContract } = useWriteContract();
 
   function handleApprove() {
     if (!amount) return;
