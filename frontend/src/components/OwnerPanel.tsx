@@ -72,8 +72,6 @@ export function OwnerPanel() {
 
   return (
     <div>
-      <h2>Owner Panel</h2>
-
       <p>Contract Owner Connected</p>
 
       <input

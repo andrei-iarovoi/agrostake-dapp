@@ -7,6 +7,8 @@ import { agroTokenAbi } from '../contracts/agroToken';
 
 import { formatTokenAmount } from '../utils/format';
 
+import { StatCard } from './ui/StarCard';
+
 export function UserStats() {
   const { address, isConnected } = useAccount();
 
@@ -44,33 +46,33 @@ export function UserStats() {
   });
 
   if (!isConnected) {
-    return <p>Connect wallet to view your stats.</p>;
+    return <p className="text-slate-400">Connect wallet to view your stats.</p>;
   }
 
   return (
     <div>
-      <h2>Your Position</h2>
+      <h2 className="mb-6 text-2xl font-bold">Your Position</h2>
 
-      <div className="stats-grid">
-        <div className="stat-card">
-          <span>Wallet Balance</span>
-          <strong>{balance ? formatTokenAmount(balance) : '0'} AGRO</strong>
-        </div>
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <StatCard
+          label="Wallet Balance"
+          value={`${balance ? formatTokenAmount(balance) : '0'} AGRO`}
+        />
 
-        <div className="stat-card">
-          <span>Staked Amount</span>
-          <strong>{stakeInfo ? formatTokenAmount(stakeInfo.amount) : '0'} AGRO</strong>
-        </div>
+        <StatCard
+          label="Staked Amount"
+          value={`${stakeInfo ? formatTokenAmount(stakeInfo.amount) : '0'} AGRO`}
+        />
 
-        <div className="stat-card">
-          <span>Claimed Rewards</span>
-          <strong>{stakeInfo ? formatTokenAmount(stakeInfo.rewardsClaimed) : '0'} AGRO</strong>
-        </div>
+        <StatCard
+          label="Claimed Rewards"
+          value={`${stakeInfo ? formatTokenAmount(stakeInfo.rewardsClaimed) : '0'} AGRO`}
+        />
 
-        <div className="stat-card">
-          <span>Pending Rewards</span>
-          <strong>{pendingRewards ? formatTokenAmount(pendingRewards) : '0'} AGRO</strong>
-        </div>
+        <StatCard
+          label="Pending Rewards"
+          value={`${pendingRewards ? formatTokenAmount(pendingRewards) : '0'} AGRO`}
+        />
       </div>
     </div>
   );

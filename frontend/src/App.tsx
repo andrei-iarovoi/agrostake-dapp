@@ -10,36 +10,58 @@ import { OwnerPanel } from './components/OwnerPanel';
 
 function App() {
   return (
-    <main className="app">
-      <header className="header">
-        <h1>AgroStake</h1>
+    <main className="min-h-screen bg-slate-950 text-white">
+      <div className="mx-auto max-w-7xl px-6 py-10">
+        <header className="mb-10 flex flex-col items-center gap-6">
+          <h1 className="text-5xl font-bold">🌾 AgroStake</h1>
 
-        <ConnectWallet />
-      </header>
+          <p className="text-slate-400">Stake AGRO tokens and earn rewards</p>
 
-      <section className="section">
-        <ProtocolStats />
-      </section>
+          <ConnectWallet />
+        </header>
 
-      <section className="section">
-        <UserStats />
-      </section>
+        <section className="mb-6 rounded-2xl border border-slate-800 bg-slate-900 p-6">
+          <ProtocolStats />
+        </section>
 
-      <section className="section">
-        <h2>Actions</h2>
+        <section className="mb-6 rounded-2xl border border-slate-800 bg-slate-900 p-6">
+          <UserStats />
+        </section>
 
-        <Faucet />
+        <section className="mb-6 rounded-2xl border border-slate-800 bg-slate-900 p-6">
+          <h2 className="mb-6 text-2xl font-semibold">Actions</h2>
 
-        <StakeForm />
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <div className="rounded-xl border border-slate-700 p-4">
+              <Faucet />
+            </div>
 
-        <ClaimRewards />
+            <div className="rounded-xl border border-slate-700 p-4">
+              <StakeForm />
+            </div>
 
-        <UnstakeForm />
+            <div className="rounded-xl border border-slate-700 p-4">
+              <ClaimRewards />
+            </div>
 
-        <EmergencyWithdraw />
+            <div className="rounded-xl border border-slate-700 p-4">
+              <UnstakeForm />
+            </div>
 
-        <OwnerPanel />
-      </section>
+            <div className="rounded-xl border border-slate-700 p-4">
+              <EmergencyWithdraw />
+            </div>
+          </div>
+        </section>
+
+        <section className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
+          <h2 className="mb-6 text-2xl font-semibold">Owner Dashboard</h2>
+
+          <div className="rounded-xl border border-slate-700 p-4">
+            <OwnerPanel />
+          </div>
+        </section>
+      </div>
     </main>
   );
 }

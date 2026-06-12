@@ -5,45 +5,40 @@ import { agroStakingAbi } from '../contracts/agroStaking';
 
 import { formatTokenAmount } from '../utils/format';
 
+import { StatCard } from './ui/StarCard';
+
 export function ProtocolStats() {
   const { data: stats, isLoading } = useReadContract({
     address: AGRO_STAKING_ADDRESS,
     abi: agroStakingAbi,
     functionName: 'getProtocolStats',
-
     query: {
       refetchInterval: 5000,
     },
   });
 
   if (isLoading) {
-    return <p>Loading protocol stats...</p>;
+    return <p className="text-slate-400">Loading protocol stats...</p>;
   }
 
   return (
     <div>
-      <h2>Protocol Stats</h2>
+      <h2 className="mb-6 text-2xl font-bold">Protocol Statistics</h2>
 
-      <div className="stats-grid">
-        <div className="stat-card">
-          <span>APR</span>
-          <strong>{stats?.apr.toString()}%</strong>
-        </div>
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <StatCard label="APR" value={`${stats?.apr.toString() ?? '0'}%`} />
 
-        <div className="stat-card">
-          <span>TVL</span>
-          <strong>{stats ? formatTokenAmount(stats.totalStaked) : 0} AGRO</strong>
-        </div>
+        <StatCard
+          label="TVL"
+          value={`${stats ? formatTokenAmount(stats.totalStaked) : '0'} AGRO`}
+        />
 
-        <div className="stat-card">
-          <span>Total Stakers</span>
-          <strong>{stats?.totalStakers.toString()}</strong>
-        </div>
+        <StatCard label="Total Stakers" value={stats?.totalStakers.toString() ?? '0'} />
 
-        <div className="stat-card">
-          <span>Reward Pool</span>
-          <strong>{stats ? formatTokenAmount(stats.rewardPoolBalance) : 0} AGRO</strong>
-        </div>
+        <StatCard
+          label="Reward Pool"
+          value={`${stats ? formatTokenAmount(stats.rewardPoolBalance) : '0'} AGRO`}
+        />
       </div>
     </div>
   );
