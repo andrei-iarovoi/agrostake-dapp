@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { parseEther } from 'viem';
-import { useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
+import { useWaitForTransactionReceipt, useWriteContract, useAccount, useReadContract } from 'wagmi';
 
 import { AGRO_TOKEN_ADDRESS, AGRO_STAKING_ADDRESS } from '../contracts/addresses';
 import { agroTokenAbi } from '../contracts/agroToken';
@@ -11,11 +11,32 @@ import { Input } from './ui/Input';
 import { TransactionStatus } from './ui/TransactionStatus';
 import { Sprout } from 'lucide-react';
 import { ActionCard } from './ui/ActionCard';
-import { toast } from 'sonner';
 import { useTransactionToast } from '../hooks/useTransactionToast';
 
 export function StakeForm() {
   const [amount, setAmount] = useState('');
+  const { address } = useAccount();
+
+  const { data: balance } = useReadContract({
+    address: AGRO_TOKEN_ADDRESS,
+    abi: agroTokenAbi,
+    functionName: 'balanceOf',
+    args: address ? [address] : undefined,
+    query: {
+      enabled: !!address,
+    },
+  });
+
+  const { data: allowance } = useReadContract({
+    address: AGRO_TOKEN_ADDRESS,
+    abi: agroTokenAbi,
+    functionName: 'allowance',
+    args: address ? [address, AGRO_STAKING_ADDRESS] : undefined,
+    query: {
+      enabled: !!address,
+      refetchInterval: 3000,
+    },
+  });
 
   const { data: hash, writeContract, isPending, error } = useWriteContract();
   const { isPending: isConfirming, isSuccess } = useWaitForTransactionReceipt({
@@ -32,6 +53,20 @@ export function StakeForm() {
     error,
     toastId: 'stake',
   });
+
+  const parsedAmount = amount && Number(amount) > 0 ? parseEther(amount) : 0n;
+  const hasEnoughAllowance = allowance !== undefined && allowance >= parsedAmount;
+
+  const hasEnoughBalance = balance !== undefined && balance >= parsedAmount;
+  let stakeError = '';
+
+  if (!amount) {
+    stakeError = 'Enter amount';
+  } else if (!hasEnoughBalance) {
+    stakeError = 'Insufficient balance';
+  } else if (!hasEnoughAllowance) {
+    stakeError = 'Approval required';
+  }
 
   function handleApprove() {
     if (!amount) return;
@@ -70,13 +105,17 @@ export function StakeForm() {
       />
 
       <div className="space-y-2">
-        <Button variant="warning" onClick={handleApprove}>
+        <Button variant="warning" onClick={handleApprove} disabled={!amount || !hasEnoughBalance}>
           Approve
         </Button>
 
-        <Button variant="success" onClick={handleStake}>
+        <Button variant="success" onClick={handleStake} disabled={!!stakeError}>
           Stake
         </Button>
+        {stakeError && <p className="text-sm text-amber-400">{stakeError}</p>}
+        <p className="text-xs text-slate-500">
+          {hasEnoughAllowance ? '✅ Approved' : '⚠ Approval required'}
+        </p>
       </div>
 
       <TransactionStatus

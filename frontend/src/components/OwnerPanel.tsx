@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { parseEther } from 'viem';
-import { useAccount, useReadContract, useWriteContract } from 'wagmi';
+import { parseEther, isAddress } from 'viem';
+import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 
 import { ShieldCheck, Coins } from 'lucide-react';
 
@@ -10,13 +10,22 @@ import { agroTokenAbi } from '../contracts/agroToken';
 
 import { Button } from './ui/Button';
 import { Input } from './ui/Input';
+import { useTransactionToast } from '../hooks/useTransactionToast';
+import { TransactionStatus } from './ui/TransactionStatus';
 
 export function OwnerPanel() {
   const [amount, setAmount] = useState('');
   const [mintAddress, setMintAddress] = useState('');
   const [mintAmount, setMintAmount] = useState('');
+  const isValidMintAddress = mintAddress === '' || isAddress(mintAddress);
+  const { data: hash, writeContract, isPending, error } = useWriteContract();
 
-  const { writeContract } = useWriteContract();
+  const { isPending: isConfirming, isSuccess } = useWaitForTransactionReceipt({
+    hash: hash!,
+    query: {
+      enabled: Boolean(hash),
+    },
+  });
   const { address } = useAccount();
 
   const { data: owner } = useReadContract({
@@ -30,6 +39,14 @@ export function OwnerPanel() {
   if (address.toLowerCase() !== owner.toLowerCase()) {
     return null;
   }
+
+  useTransactionToast({
+    isPending,
+    isConfirming,
+    isSuccess,
+    error,
+    toastId: 'owner-panel',
+  });
 
   function handleApprovePool() {
     if (!amount) return;
@@ -115,6 +132,9 @@ export function OwnerPanel() {
           placeholder="Recipient Address"
           onChange={(e) => setMintAddress(e.target.value)}
         />
+        {mintAddress && !isValidMintAddress && (
+          <p className="text-sm text-red-400">Invalid wallet address</p>
+        )}
 
         <Input
           type="number"
@@ -123,9 +143,21 @@ export function OwnerPanel() {
           onChange={(e) => setMintAmount(e.target.value)}
         />
 
-        <Button variant="primary" onClick={handleMint}>
+        <Button
+          variant="primary"
+          onClick={handleMint}
+          disabled={!mintAmount || !mintAddress || !isValidMintAddress}
+        >
           Mint Tokens
         </Button>
+
+        <TransactionStatus
+          isPending={isPending}
+          isConfirming={Boolean(hash) && isConfirming}
+          isSuccess={Boolean(hash) && isSuccess}
+          error={error}
+          hash={hash}
+        />
       </div>
     </div>
   );
