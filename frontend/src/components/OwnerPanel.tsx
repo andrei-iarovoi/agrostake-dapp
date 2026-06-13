@@ -1,10 +1,15 @@
+import { useState } from 'react';
+import { parseEther } from 'viem';
 import { useAccount, useReadContract, useWriteContract } from 'wagmi';
+
+import { ShieldCheck, Coins } from 'lucide-react';
 
 import { AGRO_STAKING_ADDRESS, AGRO_TOKEN_ADDRESS } from '../contracts/addresses';
 import { agroStakingAbi } from '../contracts/agroStaking';
-import { useState } from 'react';
-import { parseEther } from 'viem';
 import { agroTokenAbi } from '../contracts/agroToken';
+
+import { Button } from './ui/Button';
+import { Input } from './ui/Input';
 
 export function OwnerPanel() {
   const [amount, setAmount] = useState('');
@@ -12,7 +17,6 @@ export function OwnerPanel() {
   const [mintAmount, setMintAmount] = useState('');
 
   const { writeContract } = useWriteContract();
-
   const { address } = useAccount();
 
   const { data: owner } = useReadContract({
@@ -21,9 +25,7 @@ export function OwnerPanel() {
     functionName: 'owner',
   });
 
-  if (!address || !owner) {
-    return null;
-  }
+  if (!address || !owner) return null;
 
   if (address.toLowerCase() !== owner.toLowerCase()) {
     return null;
@@ -56,9 +58,7 @@ export function OwnerPanel() {
   }
 
   function handleMint() {
-    if (!mintAddress || !mintAmount) {
-      return;
-    }
+    if (!mintAddress || !mintAmount) return;
 
     writeContract({
       account: undefined,
@@ -71,35 +71,62 @@ export function OwnerPanel() {
   }
 
   return (
-    <div>
-      <p>Contract Owner Connected</p>
+    <div className="space-y-8">
+      <div className="flex items-center gap-3 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4">
+        <ShieldCheck className="text-emerald-400" size={24} />
 
-      <input
-        type="number"
-        value={amount}
-        onChange={(e) => setAmount(e.target.value)}
-        placeholder="Reward Pool Amount"
-      />
-      <button onClick={handleApprovePool}>Approve Reward Pool</button>
-      <button onClick={handleFundPool}>Fund Reward Pool</button>
+        <div>
+          <p className="font-semibold text-emerald-300">Contract Owner Connected</p>
 
-      <h3>Mint Tokens</h3>
+          <p className="text-sm text-slate-400">Administrative functions unlocked</p>
+        </div>
+      </div>
 
-      <input
-        type="text"
-        value={mintAddress}
-        onChange={(e) => setMintAddress(e.target.value)}
-        placeholder="Recipient Address"
-      />
+      <div className="space-y-4">
+        <h3 className="flex items-center gap-2 text-xl font-semibold">
+          <Coins size={20} />
+          Reward Pool Management
+        </h3>
 
-      <input
-        type="number"
-        value={mintAmount}
-        onChange={(e) => setMintAmount(e.target.value)}
-        placeholder="Amount"
-      />
+        <Input
+          type="number"
+          value={amount}
+          placeholder="Reward Pool Amount"
+          onChange={(e) => setAmount(e.target.value)}
+        />
 
-      <button onClick={handleMint}>Mint Tokens</button>
+        <div className="grid gap-3 md:grid-cols-2">
+          <Button variant="warning" onClick={handleApprovePool}>
+            Approve Pool Funding
+          </Button>
+
+          <Button variant="success" onClick={handleFundPool}>
+            Fund Reward Pool
+          </Button>
+        </div>
+      </div>
+
+      <div className="space-y-4 border-t border-slate-800 pt-6">
+        <h3 className="text-xl font-semibold">Mint AGRO Tokens</h3>
+
+        <Input
+          type="text"
+          value={mintAddress}
+          placeholder="Recipient Address"
+          onChange={(e) => setMintAddress(e.target.value)}
+        />
+
+        <Input
+          type="number"
+          value={mintAmount}
+          placeholder="Amount"
+          onChange={(e) => setMintAmount(e.target.value)}
+        />
+
+        <Button variant="primary" onClick={handleMint}>
+          Mint Tokens
+        </Button>
+      </div>
     </div>
   );
 }

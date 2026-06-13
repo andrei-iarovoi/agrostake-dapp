@@ -22,7 +22,9 @@ export function ClaimRewards() {
     <div className="space-y-4">
       <h3 className="text-xl font-semibold">Rewards</h3>
 
-      <Button onClick={handleClaimRewards}>Claim Rewards</Button>
+      <Button variant="success" onClick={handleClaimRewards}>
+        Claim Rewards
+      </Button>
     </div>
   );
 }

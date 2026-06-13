@@ -23,11 +23,10 @@ function App() {
           <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-slate-950/80" />
 
           <div className="relative z-10 flex flex-col items-center gap-6 px-8 py-20">
-            <h1 className="text-6xl font-bold">🌾 AgroStake</h1>
+            <h1 className="text-7xl font-bold">🌾 AgroStake</h1>
 
-            <p className="max-w-xl text-center text-slate-300">
-              Decentralized agricultural staking protocol Stake AGRO tokens Earn rewards Support the
-              AgroVerse ecosystem
+            <p className="mt-2 text-lg text-slate-300">
+              Decentralized Agricultural Staking Protocol
             </p>
 
             <ConnectWallet />
@@ -46,30 +45,30 @@ function App() {
           <h2 className="mb-6 text-2xl font-semibold">Actions</h2>
 
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            <div className="rounded-xl border border-slate-700 p-4">
+            <div className="flex min-h-[180px] flex-col rounded-xl border border-slate-700 p-4">
               <Faucet />
             </div>
 
-            <div className="rounded-xl border border-slate-700 p-4">
+            <div className="flex min-h-[180px] flex-col rounded-xl border border-slate-700 p-4">
               <StakeForm />
             </div>
 
-            <div className="rounded-xl border border-slate-700 p-4">
+            <div className="flex min-h-[180px] flex-col rounded-xl border border-slate-700 p-4">
               <ClaimRewards />
             </div>
 
-            <div className="rounded-xl border border-slate-700 p-4">
+            <div className="flex min-h-[180px] flex-col rounded-xl border border-slate-700 p-4">
               <UnstakeForm />
             </div>
 
-            <div className="rounded-xl border border-slate-700 p-4">
+            <div className="flex min-h-[180px] flex-col rounded-xl border border-slate-700 p-4">
               <EmergencyWithdraw />
             </div>
           </div>
         </section>
 
-        <section className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
-          <h2 className="mb-6 text-2xl font-semibold">Owner Dashboard</h2>
+        <section className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-6">
+          <h2 className="mb-6 text-2xl font-semibold text-amber-300">Owner Dashboard</h2>
 
           <div className="rounded-xl border border-slate-700 p-4">
             <OwnerPanel />

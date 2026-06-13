@@ -52,9 +52,13 @@ export function StakeForm() {
       />
 
       <div className="space-y-2">
-        <Button onClick={handleApprove}>Approve</Button>
+        <Button variant="warning" onClick={handleApprove}>
+          Approve
+        </Button>
 
-        <Button onClick={handleStake}>Stake</Button>
+        <Button variant="success" onClick={handleStake}>
+          Stake
+        </Button>
       </div>
     </div>
   );

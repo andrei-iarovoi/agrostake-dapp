@@ -2,6 +2,7 @@ import { useWriteContract } from 'wagmi';
 
 import { AGRO_STAKING_ADDRESS } from '../contracts/addresses';
 import { agroStakingAbi } from '../contracts/agroStaking';
+import { Button } from './ui/Button';
 
 export function EmergencyWithdraw() {
   const { writeContract, isPending } = useWriteContract();
@@ -23,14 +24,14 @@ export function EmergencyWithdraw() {
   }
 
   return (
-    <div>
-      <h2>Emergency Withdraw</h2>
+    <div className="space-y-4">
+      <h3 className="text-xl font-semibold">Emergency Withdraw</h3>
 
-      <p>⚠️ All pending rewards will be lost.</p>
+      <p className="text-sm text-red-400">⚠️ All pending rewards will be lost.</p>
 
-      <button onClick={handleEmergencyWithdraw} disabled={isPending}>
-        {isPending ? 'Withdrawing...' : 'Emergency Withdraw'}
-      </button>
+      <Button variant="danger" onClick={handleEmergencyWithdraw}>
+        Emergency Withdraw
+      </Button>
     </div>
   );
 }

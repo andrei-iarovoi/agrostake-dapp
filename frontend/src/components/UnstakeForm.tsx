@@ -37,7 +37,9 @@ export function UnstakeForm() {
         onChange={(e) => setAmount(e.target.value)}
       />
 
-      <Button onClick={handleUnstake}>Unstake</Button>
+      <Button variant="danger" onClick={handleUnstake}>
+        Unstake
+      </Button>
     </div>
   );
 }
