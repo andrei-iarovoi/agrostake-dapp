@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { parseEther } from 'viem';
 import { useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
 
@@ -9,6 +9,10 @@ import { agroStakingAbi } from '../contracts/agroStaking';
 import { Button } from './ui/Button';
 import { Input } from './ui/Input';
 import { TransactionStatus } from './ui/TransactionStatus';
+import { Sprout } from 'lucide-react';
+import { ActionCard } from './ui/ActionCard';
+import { toast } from 'sonner';
+import { useTransactionToast } from '../hooks/useTransactionToast';
 
 export function StakeForm() {
   const [amount, setAmount] = useState('');
@@ -19,6 +23,14 @@ export function StakeForm() {
     query: {
       enabled: Boolean(hash),
     },
+  });
+
+  useTransactionToast({
+    isPending,
+    isConfirming,
+    isSuccess,
+    error,
+    toastId: 'stake',
   });
 
   function handleApprove() {
@@ -48,9 +60,8 @@ export function StakeForm() {
   }
 
   return (
-    <div className="space-y-4">
-      <h3 className="text-xl font-semibold">Stake Tokens</h3>
-
+    <ActionCard title="Stake Tokens" icon={<Sprout size={20} className="text-emerald-400" />}>
+      <p className="text-sm text-slate-400">Approve AGRO and start earning rewards.</p>
       <Input
         type="number"
         value={amount}
@@ -70,10 +81,11 @@ export function StakeForm() {
 
       <TransactionStatus
         isPending={isPending}
-        isConfirming={isConfirming}
-        isSuccess={isSuccess}
+        isConfirming={Boolean(hash) && isConfirming}
+        isSuccess={Boolean(hash) && isSuccess}
         error={error}
+        hash={hash}
       />
-    </div>
+    </ActionCard>
   );
 }

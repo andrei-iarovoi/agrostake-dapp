@@ -1,11 +1,12 @@
-type Props = {
-  isPending?: boolean;
-  isConfirming?: boolean;
-  isSuccess?: boolean;
-  error?: Error | null;
+type TransactionStatusProps = {
+  isPending: boolean;
+  isConfirming: boolean;
+  isSuccess: boolean;
+  error: Error | null;
+  hash?: string;
 };
 
-export function TransactionStatus({ isPending, isConfirming, isSuccess, error }: Props) {
+export function TransactionStatus({ isPending, isConfirming, isSuccess, error, hash }: Props) {
   if (isPending) {
     return <p className="text-sm text-amber-400">⏳ Waiting for wallet confirmation...</p>;
   }
@@ -15,7 +16,22 @@ export function TransactionStatus({ isPending, isConfirming, isSuccess, error }:
   }
 
   if (isSuccess) {
-    return <p className="text-sm text-emerald-400">✅ Transaction confirmed</p>;
+    return (
+      <div className="space-y-1">
+        <p className="text-sm text-emerald-400">✅ Transaction confirmed</p>
+
+        {hash && (
+          <a
+            href={`https://sepolia.etherscan.io/tx/${hash}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm text-cyan-400 hover:text-cyan-300"
+          >
+            🔗 View Transaction
+          </a>
+        )}
+      </div>
+    );
   }
 
   if (error) {

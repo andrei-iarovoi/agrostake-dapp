@@ -1,3 +1,5 @@
+import { BarChart3, User, Zap, ShieldCheck } from 'lucide-react';
+
 import { ConnectWallet } from './components/ConnectWallet';
 import { ProtocolStats } from './components/ProtocolStats';
 import { UserStats } from './components/UserStats';
@@ -42,33 +44,25 @@ function App() {
         </section>
 
         <section className="mb-6 rounded-2xl border border-slate-800 bg-slate-900 p-6">
-          <h2 className="mb-6 text-2xl font-semibold">Actions</h2>
+          <div className="mb-6 flex items-center gap-3">
+            <Zap size={28} className="text-amber-400" />
+            <h2 className="text-3xl font-bold">Actions</h2>
+          </div>
 
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            <div className="flex min-h-[180px] flex-col rounded-xl border border-slate-700 p-4">
-              <Faucet />
-            </div>
-
-            <div className="flex min-h-[180px] flex-col rounded-xl border border-slate-700 p-4">
-              <StakeForm />
-            </div>
-
-            <div className="flex min-h-[180px] flex-col rounded-xl border border-slate-700 p-4">
-              <ClaimRewards />
-            </div>
-
-            <div className="flex min-h-[180px] flex-col rounded-xl border border-slate-700 p-4">
-              <UnstakeForm />
-            </div>
-
-            <div className="flex min-h-[180px] flex-col rounded-xl border border-slate-700 p-4">
-              <EmergencyWithdraw />
-            </div>
+            <Faucet />
+            <StakeForm />
+            <ClaimRewards />
+            <UnstakeForm />
+            <EmergencyWithdraw />
           </div>
         </section>
 
         <section className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-6">
-          <h2 className="mb-6 text-2xl font-semibold text-amber-300">Owner Dashboard</h2>
+          <div className="mb-6 flex items-center gap-3">
+            <ShieldCheck size={28} className="text-emerald-400" />
+            <h2 className="text-3xl font-bold">Owner Dashboard</h2>
+          </div>
 
           <div className="rounded-xl border border-slate-700 p-4">
             <OwnerPanel />

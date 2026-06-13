@@ -8,6 +8,9 @@ import { agroStakingAbi } from '../contracts/agroStaking';
 import { Button } from './ui/Button';
 import { Input } from './ui/Input';
 import { TransactionStatus } from './ui/TransactionStatus';
+import { ArrowDownCircle } from 'lucide-react';
+import { ActionCard } from './ui/ActionCard';
+import { useTransactionToast } from '../hooks/useTransactionToast';
 
 export function UnstakeForm() {
   const [amount, setAmount] = useState('');
@@ -19,6 +22,14 @@ export function UnstakeForm() {
     query: {
       enabled: Boolean(hash),
     },
+  });
+
+  useTransactionToast({
+    isPending,
+    isConfirming,
+    isSuccess,
+    error,
+    toastId: 'unstake',
   });
 
   function handleUnstake() {
@@ -35,9 +46,11 @@ export function UnstakeForm() {
   }
 
   return (
-    <div className="space-y-4">
-      <h3 className="text-xl font-semibold">Unstake Tokens</h3>
-
+    <ActionCard
+      title="Unstake Tokens"
+      icon={<ArrowDownCircle size={20} className="text-red-400" />}
+    >
+      <p className="text-sm text-slate-400">Withdraw staked AGRO tokens.</p>
       <Input
         type="number"
         value={amount}
@@ -51,10 +64,11 @@ export function UnstakeForm() {
 
       <TransactionStatus
         isPending={isPending}
-        isConfirming={isConfirming}
-        isSuccess={isSuccess}
+        isConfirming={Boolean(hash) && isConfirming}
+        isSuccess={Boolean(hash) && isSuccess}
         error={error}
+        hash={hash}
       />
-    </div>
+    </ActionCard>
   );
 }

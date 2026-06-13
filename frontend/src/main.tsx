@@ -15,14 +15,17 @@ import App from './App';
 
 import './index.css';
 
+import { Toaster } from 'sonner';
+
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider>
+        <RainbowKitProvider locale="en">
           <App />
+          <Toaster richColors position="top-right" />
         </RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>

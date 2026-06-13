@@ -4,6 +4,9 @@ import { AGRO_STAKING_ADDRESS } from '../contracts/addresses';
 import { agroStakingAbi } from '../contracts/agroStaking';
 import { Button } from './ui/Button';
 import { TransactionStatus } from './ui/TransactionStatus';
+import { AlertTriangle, TriangleAlert } from 'lucide-react';
+import { ActionCard } from './ui/ActionCard';
+import { useTransactionToast } from '../hooks/useTransactionToast';
 
 export function EmergencyWithdraw() {
   const { data: hash, writeContract, isPending, error } = useWriteContract();
@@ -13,6 +16,14 @@ export function EmergencyWithdraw() {
     query: {
       enabled: Boolean(hash),
     },
+  });
+
+  useTransactionToast({
+    isPending,
+    isConfirming,
+    isSuccess,
+    error,
+    toastId: 'emergency-withdraw',
   });
 
   function handleEmergencyWithdraw() {
@@ -32,10 +43,11 @@ export function EmergencyWithdraw() {
   }
 
   return (
-    <div className="space-y-4">
-      <h3 className="text-xl font-semibold">Emergency Withdraw</h3>
-
-      <p className="text-sm text-red-400">⚠️ All pending rewards will be lost.</p>
+    <ActionCard
+      title="Emergency Withdraw"
+      icon={<AlertTriangle size={20} className="text-red-400" />}
+    >
+      <p className="text-sm text-red-400">⚠️ Withdraw instantly and forfeit pending rewards.</p>
 
       <Button variant="danger" onClick={handleEmergencyWithdraw}>
         Emergency Withdraw
@@ -43,10 +55,11 @@ export function EmergencyWithdraw() {
 
       <TransactionStatus
         isPending={isPending}
-        isConfirming={isConfirming}
-        isSuccess={isSuccess}
+        isConfirming={Boolean(hash) && isConfirming}
+        isSuccess={Boolean(hash) && isSuccess}
         error={error}
+        hash={hash}
       />
-    </div>
+    </ActionCard>
   );
 }

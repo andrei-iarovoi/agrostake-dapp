@@ -1,3 +1,5 @@
+import { Wallet, Coins, Gift, Clock3, User } from 'lucide-react';
+
 import { useAccount, useReadContract } from 'wagmi';
 
 import { AGRO_STAKING_ADDRESS, AGRO_TOKEN_ADDRESS } from '../contracts/addresses';
@@ -51,25 +53,32 @@ export function UserStats() {
 
   return (
     <div>
-      <h2 className="mb-6 text-2xl font-bold">Your Position</h2>
+      <div className="mb-6 flex items-center gap-3">
+        <User size={28} className="text-cyan-400" />
+        <h2 className="text-3xl font-bold">Your Position</h2>
+      </div>
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <StatCard
+          icon={<Wallet size={16} />}
           label="Wallet Balance"
           value={`${balance ? formatTokenAmount(balance) : '0'} AGRO`}
         />
 
         <StatCard
+          icon={<Coins size={16} />}
           label="Staked Amount"
           value={`${stakeInfo ? formatTokenAmount(stakeInfo.amount) : '0'} AGRO`}
         />
 
         <StatCard
+          icon={<Gift size={16} />}
           label="Claimed Rewards"
           value={`${stakeInfo ? formatTokenAmount(stakeInfo.rewardsClaimed) : '0'} AGRO`}
         />
 
         <StatCard
+          icon={<Clock3 size={16} />}
           label="Pending Rewards"
           value={`${pendingRewards ? formatTokenAmount(pendingRewards) : '0'} AGRO`}
         />
