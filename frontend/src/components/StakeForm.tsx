@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { parseEther } from 'viem';
-import { useWriteContract } from 'wagmi';
+import { useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
 
 import { AGRO_TOKEN_ADDRESS, AGRO_STAKING_ADDRESS } from '../contracts/addresses';
 import { agroTokenAbi } from '../contracts/agroToken';
@@ -12,7 +12,13 @@ import { Input } from './ui/Input';
 export function StakeForm() {
   const [amount, setAmount] = useState('');
 
-  const { writeContract } = useWriteContract();
+  const { data: hash, writeContract, isPending, error } = useWriteContract();
+  const { isPending: isConfirming, isSuccess } = useWaitForTransactionReceipt({
+    hash: hash!,
+    query: {
+      enabled: Boolean(hash),
+    },
+  });
 
   function handleApprove() {
     if (!amount) return;
@@ -60,6 +66,15 @@ export function StakeForm() {
           Stake
         </Button>
       </div>
+      {hash && isPending && (
+        <p className="text-sm text-amber-400">⏳ Waiting for wallet confirmation...</p>
+      )}
+
+      {hash && isConfirming && <p className="text-sm text-blue-400">🔄 Transaction pending...</p>}
+
+      {hash && isSuccess && <p className="text-sm text-emerald-400">✅ Transaction confirmed</p>}
+
+      {hash && error && <p className="text-sm text-red-400">❌ Transaction failed</p>}
     </div>
   );
 }

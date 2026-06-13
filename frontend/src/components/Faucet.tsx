@@ -24,7 +24,7 @@ export function Faucet() {
 
       <p className="text-sm text-slate-400">Receive test AGRO tokens.</p>
 
-      <Button onClick={handleFaucet}>Get Test Tokens</Button>
+      <Button variant="secondary">Get Test Tokens</Button>
     </div>
   );
 }
