@@ -10,6 +10,7 @@ import { UnstakeForm } from './components/UnstakeForm';
 import { EmergencyWithdraw } from './components/EmergencyWithdraw';
 import { OwnerPanel } from './components/OwnerPanel';
 import agroBg from './assets/agro-bg.png';
+import { NetworkGuard } from './components/NetworkGuard';
 
 function App() {
   return (
@@ -34,6 +35,8 @@ function App() {
             <ConnectWallet />
           </div>
         </header>
+
+        <NetworkGuard />
 
         <section className="mb-6 rounded-2xl border border-slate-800 bg-slate-900 p-6">
           <ProtocolStats />
