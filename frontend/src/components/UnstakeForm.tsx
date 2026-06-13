@@ -1,17 +1,25 @@
 import { useState } from 'react';
 import { parseEther } from 'viem';
-import { useWriteContract } from 'wagmi';
+import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 
 import { AGRO_STAKING_ADDRESS } from '../contracts/addresses';
 import { agroStakingAbi } from '../contracts/agroStaking';
 
 import { Button } from './ui/Button';
 import { Input } from './ui/Input';
+import { TransactionStatus } from './ui/TransactionStatus';
 
 export function UnstakeForm() {
   const [amount, setAmount] = useState('');
 
-  const { writeContract } = useWriteContract();
+  const { data: hash, writeContract, isPending, error } = useWriteContract();
+
+  const { isPending: isConfirming, isSuccess } = useWaitForTransactionReceipt({
+    hash: hash!,
+    query: {
+      enabled: Boolean(hash),
+    },
+  });
 
   function handleUnstake() {
     if (!amount) return;
@@ -40,6 +48,13 @@ export function UnstakeForm() {
       <Button variant="danger" onClick={handleUnstake}>
         Unstake
       </Button>
+
+      <TransactionStatus
+        isPending={isPending}
+        isConfirming={isConfirming}
+        isSuccess={isSuccess}
+        error={error}
+      />
     </div>
   );
 }

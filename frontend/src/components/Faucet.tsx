@@ -1,12 +1,20 @@
-import { useWriteContract } from 'wagmi';
+import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 
 import { AGRO_TOKEN_ADDRESS } from '../contracts/addresses';
 import { agroTokenAbi } from '../contracts/agroToken';
 
 import { Button } from './ui/Button';
+import { TransactionStatus } from './ui/TransactionStatus';
 
 export function Faucet() {
-  const { writeContract } = useWriteContract();
+  const { data: hash, writeContract, isPending, error } = useWriteContract();
+
+  const { isPending: isConfirming, isSuccess } = useWaitForTransactionReceipt({
+    hash: hash!,
+    query: {
+      enabled: Boolean(hash),
+    },
+  });
 
   function handleFaucet() {
     writeContract({
@@ -24,7 +32,16 @@ export function Faucet() {
 
       <p className="text-sm text-slate-400">Receive test AGRO tokens.</p>
 
-      <Button variant="secondary">Get Test Tokens</Button>
+      <Button variant="secondary" onClick={handleFaucet}>
+        Get Test Tokens
+      </Button>
+
+      <TransactionStatus
+        isPending={isPending}
+        isConfirming={isConfirming}
+        isSuccess={isSuccess}
+        error={error}
+      />
     </div>
   );
 }

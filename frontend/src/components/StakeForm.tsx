@@ -8,6 +8,7 @@ import { agroStakingAbi } from '../contracts/agroStaking';
 
 import { Button } from './ui/Button';
 import { Input } from './ui/Input';
+import { TransactionStatus } from './ui/TransactionStatus';
 
 export function StakeForm() {
   const [amount, setAmount] = useState('');
@@ -66,15 +67,13 @@ export function StakeForm() {
           Stake
         </Button>
       </div>
-      {hash && isPending && (
-        <p className="text-sm text-amber-400">⏳ Waiting for wallet confirmation...</p>
-      )}
 
-      {hash && isConfirming && <p className="text-sm text-blue-400">🔄 Transaction pending...</p>}
-
-      {hash && isSuccess && <p className="text-sm text-emerald-400">✅ Transaction confirmed</p>}
-
-      {hash && error && <p className="text-sm text-red-400">❌ Transaction failed</p>}
+      <TransactionStatus
+        isPending={isPending}
+        isConfirming={isConfirming}
+        isSuccess={isSuccess}
+        error={error}
+      />
     </div>
   );
 }
