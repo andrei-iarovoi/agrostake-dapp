@@ -11,8 +11,22 @@ import { EmergencyWithdraw } from './components/EmergencyWithdraw';
 import { OwnerPanel } from './components/OwnerPanel';
 import agroBg from './assets/agro-bg.png';
 import { NetworkGuard } from './components/NetworkGuard';
+import { useAccount, useReadContract } from 'wagmi';
+
+import { AGRO_STAKING_ADDRESS } from './contracts/addresses';
+import { agroStakingAbi } from './contracts/agroStaking';
 
 function App() {
+  const { address } = useAccount();
+
+  const { data: owner } = useReadContract({
+    address: AGRO_STAKING_ADDRESS,
+    abi: agroStakingAbi,
+    functionName: 'owner',
+  });
+
+  const isOwner = address && owner && address.toLowerCase() === owner.toLowerCase();
+
   return (
     <main className="min-h-screen bg-[#08100d] text-white">
       <div className="mx-auto max-w-5xl px-4 py-8">
@@ -61,16 +75,18 @@ function App() {
           </div>
         </section>
 
-        <section className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-6">
-          <div className="mb-6 flex items-center gap-3">
-            <ShieldCheck size={28} className="text-emerald-400" />
-            <h2 className="text-3xl font-bold">Owner Dashboard</h2>
-          </div>
+        {isOwner && (
+          <section className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-6">
+            <div className="mb-6 flex items-center gap-3">
+              <ShieldCheck size={28} className="text-emerald-400" />
+              <h2 className="text-3xl font-bold">Owner Dashboard</h2>
+            </div>
 
-          <div className="rounded-xl border border-slate-700 p-4">
-            <OwnerPanel />
-          </div>
-        </section>
+            <div className="rounded-xl border border-slate-700 p-4">
+              <OwnerPanel />
+            </div>
+          </section>
+        )}
       </div>
     </main>
   );

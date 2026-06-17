@@ -18,14 +18,57 @@ export function OwnerPanel() {
   const [mintAddress, setMintAddress] = useState('');
   const [mintAmount, setMintAmount] = useState('');
   const isValidMintAddress = mintAddress === '' || isAddress(mintAddress);
-  const { data: hash, writeContract, isPending, error } = useWriteContract();
 
-  const { isPending: isConfirming, isSuccess } = useWaitForTransactionReceipt({
-    hash: hash!,
+  const {
+    data: fundHash,
+    writeContract: writeFundContract,
+    isPending: isFundPending,
+    error: fundError,
+  } = useWriteContract();
+
+  const {
+    data: mintHash,
+    writeContract: writeMintContract,
+    isPending: isMintPending,
+    error: mintError,
+  } = useWriteContract();
+
+  const fundReceipt = useWaitForTransactionReceipt({
+    hash: fundHash,
     query: {
-      enabled: Boolean(hash),
+      enabled: !!fundHash,
     },
   });
+
+  const isFundConfirming = !!fundHash && fundReceipt.isPending;
+  const isFundSuccess = !!fundHash && fundReceipt.isSuccess;
+
+  const mintReceipt = useWaitForTransactionReceipt({
+    hash: mintHash,
+    query: {
+      enabled: !!mintHash,
+    },
+  });
+
+  const isMintConfirming = !!mintHash && mintReceipt.isPending;
+  const isMintSuccess = !!mintHash && mintReceipt.isSuccess;
+
+  useTransactionToast({
+    isPending: isFundPending,
+    isConfirming: isFundConfirming,
+    isSuccess: isFundSuccess,
+    error: fundError,
+    toastId: 'owner-fund',
+  });
+
+  useTransactionToast({
+    isPending: isMintPending,
+    isConfirming: isMintConfirming,
+    isSuccess: isMintSuccess,
+    error: mintError,
+    toastId: 'mint',
+  });
+
   const { address } = useAccount();
 
   const { data: owner } = useReadContract({
@@ -34,24 +77,10 @@ export function OwnerPanel() {
     functionName: 'owner',
   });
 
-  useTransactionToast({
-    isPending,
-    isConfirming,
-    isSuccess,
-    error,
-    toastId: 'owner-panel',
-  });
-
-  if (!address || !owner) return null;
-
-  if (address.toLowerCase() !== owner.toLowerCase()) {
-    return null;
-  }
-
   function handleApprovePool() {
     if (!amount) return;
 
-    writeContract({
+    writeFundContract({
       account: undefined,
       chain: undefined,
       address: AGRO_TOKEN_ADDRESS,
@@ -64,7 +93,7 @@ export function OwnerPanel() {
   function handleFundPool() {
     if (!amount) return;
 
-    writeContract({
+    writeFundContract({
       account: undefined,
       chain: undefined,
       address: AGRO_STAKING_ADDRESS,
@@ -77,7 +106,7 @@ export function OwnerPanel() {
   function handleMint() {
     if (!mintAddress || !mintAmount) return;
 
-    writeContract({
+    writeMintContract({
       account: undefined,
       chain: undefined,
       address: AGRO_TOKEN_ADDRESS,
@@ -120,6 +149,14 @@ export function OwnerPanel() {
           <Button variant="success" onClick={handleFundPool}>
             Fund Reward Pool
           </Button>
+
+          <TransactionStatus
+            isPending={isFundPending}
+            isConfirming={Boolean(fundHash) && isFundConfirming}
+            isSuccess={Boolean(fundHash) && isFundSuccess}
+            error={fundError}
+            hash={fundHash}
+          />
         </div>
       </div>
 
@@ -152,11 +189,11 @@ export function OwnerPanel() {
         </Button>
 
         <TransactionStatus
-          isPending={isPending}
-          isConfirming={Boolean(hash) && isConfirming}
-          isSuccess={Boolean(hash) && isSuccess}
-          error={error}
-          hash={hash}
+          isPending={isMintPending}
+          isConfirming={Boolean(mintHash) && isMintConfirming}
+          isSuccess={Boolean(mintHash) && isMintSuccess}
+          error={mintError}
+          hash={mintHash}
         />
       </div>
     </div>

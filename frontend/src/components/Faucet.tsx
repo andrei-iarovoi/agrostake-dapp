@@ -12,12 +12,15 @@ import { useTransactionToast } from '../hooks/useTransactionToast';
 export function Faucet() {
   const { data: hash, writeContract, isPending, error } = useWriteContract();
 
-  const { isPending: isConfirming, isSuccess } = useWaitForTransactionReceipt({
-    hash: hash!,
+  const receipt = useWaitForTransactionReceipt({
+    hash,
     query: {
-      enabled: Boolean(hash),
+      enabled: !!hash,
     },
   });
+
+  const isConfirming = !!hash && receipt.isPending;
+  const isSuccess = !!hash && receipt.isSuccess;
 
   useTransactionToast({
     isPending,
