@@ -34,12 +34,6 @@ export function OwnerPanel() {
     functionName: 'owner',
   });
 
-  if (!address || !owner) return null;
-
-  if (address.toLowerCase() !== owner.toLowerCase()) {
-    return null;
-  }
-
   useTransactionToast({
     isPending,
     isConfirming,
@@ -47,6 +41,12 @@ export function OwnerPanel() {
     error,
     toastId: 'owner-panel',
   });
+
+  if (!address || !owner) return null;
+
+  if (address.toLowerCase() !== owner.toLowerCase()) {
+    return null;
+  }
 
   function handleApprovePool() {
     if (!amount) return;
