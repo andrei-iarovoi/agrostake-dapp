@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { parseEther } from 'viem';
-import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
+import { useWriteContract, useWaitForTransactionReceipt, useReadContract, useAccount } from 'wagmi';
 
 import { AGRO_STAKING_ADDRESS } from '../contracts/addresses';
 import { agroStakingAbi } from '../contracts/agroStaking';
@@ -14,6 +14,23 @@ import { useTransactionToast } from '../hooks/useTransactionToast';
 
 export function UnstakeForm() {
   const [amount, setAmount] = useState('');
+
+  const { address } = useAccount();
+
+  const { data: stakeInfo } = useReadContract({
+    address: AGRO_STAKING_ADDRESS,
+    abi: agroStakingAbi,
+    functionName: 'getStakeInfo',
+    args: address ? [address] : undefined,
+    query: {
+      enabled: !!address,
+      refetchInterval: 5000,
+    },
+  });
+
+  const parsedAmount = amount && Number(amount) > 0 ? parseEther(amount) : 0n;
+
+  const hasEnoughStaked = stakeInfo !== undefined && parsedAmount <= stakeInfo.amount;
 
   const { data: hash, writeContract, isPending, error } = useWriteContract();
 
@@ -35,6 +52,12 @@ export function UnstakeForm() {
     toastId: 'unstake',
   });
 
+  function handleMax() {
+    if (!stakeInfo) return;
+
+    setAmount((Number(stakeInfo.amount) / 1e18).toString());
+  }
+
   function handleUnstake() {
     if (!amount) return;
 
@@ -54,16 +77,29 @@ export function UnstakeForm() {
       icon={<ArrowDownCircle size={20} className="text-red-400" />}
     >
       <p className="text-sm text-slate-400">Withdraw staked AGRO tokens.</p>
-      <Input
-        type="number"
-        value={amount}
-        placeholder="Enter amount"
-        onChange={(e) => setAmount(e.target.value)}
-      />
+      <div className="relative">
+        <Input
+          type="number"
+          value={amount}
+          placeholder="Enter amount"
+          onChange={(e) => setAmount(e.target.value)}
+        />
 
-      <Button variant="danger" onClick={handleUnstake}>
+        <button
+          type="button"
+          onClick={handleMax}
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-emerald-400 hover:text-emerald-300"
+        >
+          MAX
+        </button>
+      </div>
+
+      <Button variant="danger" onClick={handleUnstake} disabled={!amount || !hasEnoughStaked}>
         Unstake
       </Button>
+      {amount && !hasEnoughStaked && (
+        <p className="text-sm text-red-400">Amount exceeds staked balance</p>
+      )}
 
       <TransactionStatus
         isPending={isPending}

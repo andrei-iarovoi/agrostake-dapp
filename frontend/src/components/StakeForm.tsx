@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { parseEther } from 'viem';
+import { parseEther, formatEther } from 'viem';
 import { useWaitForTransactionReceipt, useWriteContract, useAccount, useReadContract } from 'wagmi';
 
 import { AGRO_TOKEN_ADDRESS, AGRO_STAKING_ADDRESS } from '../contracts/addresses';
@@ -98,15 +98,31 @@ export function StakeForm() {
     });
   }
 
+  function handleMax() {
+    if (!balance) return;
+
+    setAmount(formatEther(balance));
+  }
+
   return (
     <ActionCard title="Stake Tokens" icon={<Sprout size={20} className="text-emerald-400" />}>
       <p className="text-sm text-slate-400">Approve AGRO and start earning rewards.</p>
-      <Input
-        type="number"
-        value={amount}
-        placeholder="Enter amount"
-        onChange={(e) => setAmount(e.target.value)}
-      />
+      <div className="relative">
+        <Input
+          type="number"
+          value={amount}
+          placeholder="Enter amount"
+          onChange={(e) => setAmount(e.target.value)}
+        />
+
+        <button
+          type="button"
+          onClick={handleMax}
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-emerald-400 hover:text-emerald-300"
+        >
+          MAX
+        </button>
+      </div>
 
       <div className="space-y-2">
         <Button variant="warning" onClick={handleApprove} disabled={!amount || !hasEnoughBalance}>
