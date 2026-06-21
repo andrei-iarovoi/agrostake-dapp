@@ -59,8 +59,10 @@ export function UnstakeForm() {
     setAmount((Number(stakeInfo.amount) / 1e18).toFixed(2));
   }
 
+  const isValidAmount = Number(amount) > 0;
+
   function handleUnstake() {
-    if (!amount) return;
+    if (!amount || Number(amount) <= 0) return;
 
     writeContract({
       account: undefined,
@@ -99,11 +101,15 @@ export function UnstakeForm() {
         Staked: {stakeInfo ? formatTokenAmount(stakeInfo.amount) : '0'} AGRO
       </p>
 
-      <Button variant="danger" onClick={handleUnstake} disabled={!amount || !hasEnoughStaked}>
+      <Button
+        variant="danger"
+        onClick={handleUnstake}
+        disabled={!isValidAmount || !hasEnoughStaked}
+      >
         Unstake
       </Button>
-      {amount && !hasEnoughStaked && (
-        <p className="text-sm text-red-400">Amount exceeds staked balance</p>
+      {amount && Number(amount) <= 0 && (
+        <p className="text-sm text-red-400">Amount must be greater than 0</p>
       )}
 
       <TransactionStatus

@@ -60,13 +60,14 @@ export function StakeForm() {
   });
 
   const parsedAmount = amount && Number(amount) > 0 ? parseEther(amount) : 0n;
+  const isValidAmount = Number(amount) > 0;
   const hasEnoughAllowance = allowance !== undefined && allowance >= parsedAmount;
 
   const hasEnoughBalance = balance !== undefined && balance >= parsedAmount;
   let stakeError = '';
 
   if (!amount) {
-    stakeError = 'Enter amount';
+    stakeError = 'Enter amount greater than 0';
   } else if (!hasEnoughBalance) {
     stakeError = 'Insufficient balance';
   } else if (!hasEnoughAllowance) {
@@ -74,7 +75,7 @@ export function StakeForm() {
   }
 
   function handleApprove() {
-    if (!amount) return;
+    if (!amount || Number(amount) <= 0) return;
 
     writeContract({
       account: undefined,
@@ -87,7 +88,7 @@ export function StakeForm() {
   }
 
   function handleStake() {
-    if (!amount) return;
+    if (!amount || Number(amount) <= 0) return;
 
     writeContract({
       account: undefined,
@@ -130,7 +131,7 @@ export function StakeForm() {
       </p>
 
       <div className="space-y-2">
-        <Button variant="warning" onClick={handleApprove} disabled={!amount || !hasEnoughBalance}>
+        <Button variant="warning" onClick={handleApprove} disabled={!isValidAmount}>
           Approve
         </Button>
 
