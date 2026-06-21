@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { parseEther } from 'viem';
 import { useWriteContract, useWaitForTransactionReceipt, useReadContract, useAccount } from 'wagmi';
 
@@ -44,6 +44,12 @@ export function UnstakeForm() {
 
   const isConfirming = !!hash && receipt.isPending;
   const isSuccess = !!hash && receipt.isSuccess;
+
+  useEffect(() => {
+    if (isSuccess) {
+      setAmount('');
+    }
+  }, [isSuccess]);
 
   useTransactionToast({
     isPending,

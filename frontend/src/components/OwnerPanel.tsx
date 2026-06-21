@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { parseEther, isAddress } from 'viem';
 import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 
@@ -12,11 +12,13 @@ import { Button } from './ui/Button';
 import { Input } from './ui/Input';
 import { useTransactionToast } from '../hooks/useTransactionToast';
 import { TransactionStatus } from './ui/TransactionStatus';
+import { formatTokenAmount } from '../utils/format';
 
 export function OwnerPanel() {
   const [amount, setAmount] = useState('');
   const [mintAddress, setMintAddress] = useState('');
   const [mintAmount, setMintAmount] = useState('');
+  const [lastFundAction, setLastFundAction] = useState<'approve' | 'fund' | null>(null);
   const isValidMintAddress = mintAddress === '' || isAddress(mintAddress);
 
   const {
@@ -50,8 +52,21 @@ export function OwnerPanel() {
     },
   });
 
+  useEffect(() => {
+    if (isFundSuccess && lastFundAction === 'fund') {
+      setAmount('');
+    }
+  }, [isFundSuccess, lastFundAction]);
+
   const isMintConfirming = !!mintHash && mintReceipt.isPending;
   const isMintSuccess = !!mintHash && mintReceipt.isSuccess;
+
+  useEffect(() => {
+    if (isMintSuccess) {
+      setMintAddress('');
+      setMintAmount('');
+    }
+  }, [isMintSuccess]);
 
   useTransactionToast({
     isPending: isFundPending,
@@ -77,8 +92,21 @@ export function OwnerPanel() {
     functionName: 'owner',
   });
 
+  const { data: poolAllowance } = useReadContract({
+    address: AGRO_TOKEN_ADDRESS,
+    abi: agroTokenAbi,
+    functionName: 'allowance',
+    args: address ? [address, AGRO_STAKING_ADDRESS] : undefined,
+    query: {
+      enabled: !!address,
+      refetchInterval: 5000,
+    },
+  });
+
   function handleApprovePool() {
     if (!amount) return;
+
+    setLastFundAction('approve');
 
     writeFundContract({
       account: undefined,
@@ -92,6 +120,8 @@ export function OwnerPanel() {
 
   function handleFundPool() {
     if (!amount) return;
+
+    setLastFundAction('fund');
 
     writeFundContract({
       account: undefined,
@@ -158,6 +188,11 @@ export function OwnerPanel() {
             hash={fundHash}
           />
         </div>
+        {poolAllowance !== undefined && poolAllowance > 0n && (
+          <p className="text-sm text-emerald-400">
+            ✅ Pool Allowance: {formatTokenAmount(poolAllowance)} AGRO
+          </p>
+        )}
       </div>
 
       <div className="space-y-4 border-t border-slate-800 pt-6">

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { parseEther, formatEther } from 'viem';
 import { useWaitForTransactionReceipt, useWriteContract, useAccount, useReadContract } from 'wagmi';
 
@@ -16,6 +16,8 @@ import { formatTokenAmount } from '../utils/format';
 
 export function StakeForm() {
   const [amount, setAmount] = useState('');
+  const [lastAction, setLastAction] = useState<'approve' | 'stake' | null>(null);
+
   const { address } = useAccount();
 
   const { data: balance } = useReadContract({
@@ -51,6 +53,12 @@ export function StakeForm() {
   const isConfirming = !!hash && receipt.isPending;
   const isSuccess = !!hash && receipt.isSuccess;
 
+  useEffect(() => {
+    if (isSuccess && lastAction === 'stake') {
+      setAmount('');
+    }
+  }, [isSuccess, lastAction]);
+
   useTransactionToast({
     isPending,
     isConfirming,
@@ -77,6 +85,8 @@ export function StakeForm() {
   function handleApprove() {
     if (!amount || Number(amount) <= 0) return;
 
+    setLastAction('approve');
+
     writeContract({
       account: undefined,
       chain: undefined,
@@ -89,6 +99,8 @@ export function StakeForm() {
 
   function handleStake() {
     if (!amount || Number(amount) <= 0) return;
+
+    setLastAction('stake');
 
     writeContract({
       account: undefined,
@@ -138,9 +150,10 @@ export function StakeForm() {
         <Button variant="success" onClick={handleStake} disabled={!!stakeError}>
           Stake
         </Button>
-        {stakeError && <p className="text-sm text-amber-400">{stakeError}</p>}
         <p className="text-xs text-slate-500">
-          {hasEnoughAllowance ? '✅ Approved' : '⚠ Approval required'}
+          {allowance !== undefined && allowance > 0n && hasEnoughAllowance
+            ? `✅ Approved: ${formatTokenAmount(allowance)} AGRO`
+            : '⚠ Approval required before staking'}
         </p>
       </div>
 
