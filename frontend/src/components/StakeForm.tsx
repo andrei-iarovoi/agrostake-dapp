@@ -12,6 +12,7 @@ import { TransactionStatus } from './ui/TransactionStatus';
 import { Sprout } from 'lucide-react';
 import { ActionCard } from './ui/ActionCard';
 import { useTransactionToast } from '../hooks/useTransactionToast';
+import { formatTokenAmount } from '../utils/format';
 
 export function StakeForm() {
   const [amount, setAmount] = useState('');
@@ -101,7 +102,7 @@ export function StakeForm() {
   function handleMax() {
     if (!balance) return;
 
-    setAmount(formatEther(balance));
+    setAmount((Number(balance) / 1e18).toFixed(2));
   }
 
   return (
@@ -123,6 +124,10 @@ export function StakeForm() {
           MAX
         </button>
       </div>
+
+      <p className="mt-1 text-xs text-slate-400">
+        Available: {balance ? formatTokenAmount(balance) : '0'} AGRO
+      </p>
 
       <div className="space-y-2">
         <Button variant="warning" onClick={handleApprove} disabled={!amount || !hasEnoughBalance}>

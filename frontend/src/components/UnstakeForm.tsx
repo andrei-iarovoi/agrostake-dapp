@@ -11,6 +11,7 @@ import { TransactionStatus } from './ui/TransactionStatus';
 import { ArrowDownCircle } from 'lucide-react';
 import { ActionCard } from './ui/ActionCard';
 import { useTransactionToast } from '../hooks/useTransactionToast';
+import { formatTokenAmount } from '../utils/format';
 
 export function UnstakeForm() {
   const [amount, setAmount] = useState('');
@@ -55,7 +56,7 @@ export function UnstakeForm() {
   function handleMax() {
     if (!stakeInfo) return;
 
-    setAmount((Number(stakeInfo.amount) / 1e18).toString());
+    setAmount((Number(stakeInfo.amount) / 1e18).toFixed(2));
   }
 
   function handleUnstake() {
@@ -93,6 +94,10 @@ export function UnstakeForm() {
           MAX
         </button>
       </div>
+
+      <p className="mt-1 text-xs text-slate-400">
+        Staked: {stakeInfo ? formatTokenAmount(stakeInfo.amount) : '0'} AGRO
+      </p>
 
       <Button variant="danger" onClick={handleUnstake} disabled={!amount || !hasEnoughStaked}>
         Unstake
