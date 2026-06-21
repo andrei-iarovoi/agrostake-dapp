@@ -143,12 +143,28 @@ export function StakeForm() {
       </p>
 
       <div className="space-y-2">
-        <Button variant="warning" onClick={handleApprove} disabled={!isValidAmount}>
-          Approve
+        <Button
+          variant="warning"
+          onClick={handleApprove}
+          disabled={!isValidAmount || isPending || isConfirming || hasEnoughAllowance}
+        >
+          {isPending && lastAction === 'approve'
+            ? 'Approving...'
+            : isConfirming && lastAction === 'approve'
+              ? 'Confirming...'
+              : 'Approve'}
         </Button>
 
-        <Button variant="success" onClick={handleStake} disabled={!!stakeError}>
-          Stake
+        <Button
+          variant="success"
+          onClick={handleStake}
+          disabled={!!stakeError || isPending || isConfirming}
+        >
+          {isPending && lastAction === 'stake'
+            ? 'Staking...'
+            : isConfirming && lastAction === 'stake'
+              ? 'Confirming...'
+              : 'Stake'}
         </Button>
         <p className="text-xs text-slate-500">
           {allowance !== undefined && allowance > 0n && hasEnoughAllowance

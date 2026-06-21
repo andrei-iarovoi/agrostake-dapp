@@ -18,7 +18,9 @@ export function OwnerPanel() {
   const [amount, setAmount] = useState('');
   const [mintAddress, setMintAddress] = useState('');
   const [mintAmount, setMintAmount] = useState('');
-  const [lastFundAction, setLastFundAction] = useState<'approve' | 'fund' | null>(null);
+  const [lastFundAction, setLastFundAction] = useState<'approvePool' | 'fundPool' | 'mint' | null>(
+    null,
+  );
   const isValidMintAddress = mintAddress === '' || isAddress(mintAddress);
 
   const {
@@ -53,7 +55,7 @@ export function OwnerPanel() {
   });
 
   useEffect(() => {
-    if (isFundSuccess && lastFundAction === 'fund') {
+    if (isFundSuccess && lastFundAction === 'fundPool') {
       setAmount('');
     }
   }, [isFundSuccess, lastFundAction]);
@@ -106,7 +108,7 @@ export function OwnerPanel() {
   function handleApprovePool() {
     if (!amount) return;
 
-    setLastFundAction('approve');
+    setLastFundAction('approvePool');
 
     writeFundContract({
       account: undefined,
@@ -121,7 +123,7 @@ export function OwnerPanel() {
   function handleFundPool() {
     if (!amount) return;
 
-    setLastFundAction('fund');
+    setLastFundAction('fundPool');
 
     writeFundContract({
       account: undefined,
@@ -135,6 +137,8 @@ export function OwnerPanel() {
 
   function handleMint() {
     if (!mintAddress || !mintAmount) return;
+
+    setLastFundAction('mint');
 
     writeMintContract({
       account: undefined,
@@ -172,12 +176,28 @@ export function OwnerPanel() {
         />
 
         <div className="grid gap-3 md:grid-cols-2">
-          <Button variant="warning" onClick={handleApprovePool}>
-            Approve Pool Funding
+          <Button
+            variant="warning"
+            onClick={handleApprovePool}
+            disabled={!amount || isFundPending || isFundConfirming}
+          >
+            {isFundPending && lastFundAction === 'approvePool'
+              ? 'Approving...'
+              : isFundConfirming && lastFundAction === 'approvePool'
+                ? 'Confirming...'
+                : 'Approve Pool Funding'}
           </Button>
 
-          <Button variant="success" onClick={handleFundPool}>
-            Fund Reward Pool
+          <Button
+            variant="success"
+            onClick={handleFundPool}
+            disabled={!amount || isFundPending || isFundConfirming}
+          >
+            {isFundPending && lastFundAction === 'fundPool'
+              ? 'Funding...'
+              : isFundConfirming && lastFundAction === 'fundPool'
+                ? 'Confirming...'
+                : 'Fund Reward Pool'}
           </Button>
 
           <TransactionStatus
@@ -218,9 +238,11 @@ export function OwnerPanel() {
         <Button
           variant="primary"
           onClick={handleMint}
-          disabled={!mintAmount || !mintAddress || !isValidMintAddress}
+          disabled={
+            !mintAmount || !mintAddress || !isValidMintAddress || isMintPending || isMintConfirming
+          }
         >
-          Mint Tokens
+          {isMintPending ? 'Minting...' : isMintConfirming ? 'Confirming...' : 'Mint Tokens'}
         </Button>
 
         <TransactionStatus

@@ -44,8 +44,8 @@ export function Faucet() {
     <ActionCard title="Faucet" icon={<Droplets size={20} className="text-cyan-400" />}>
       <p className="text-sm text-slate-400">Receive test AGRO tokens.</p>
 
-      <Button variant="secondary" onClick={handleFaucet}>
-        Get Test Tokens
+      <Button onClick={handleFaucet} disabled={isPending || isConfirming}>
+        {isPending ? 'Requesting...' : isConfirming ? 'Confirming...' : 'Get Test Tokens'}
       </Button>
 
       <TransactionStatus

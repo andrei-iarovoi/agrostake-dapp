@@ -43,8 +43,8 @@ export function ClaimRewards() {
   return (
     <ActionCard title="Rewards" icon={<Gift size={20} className="text-amber-400" />}>
       <p className="text-sm text-slate-400">Claim accumulated staking rewards.</p>
-      <Button variant="success" onClick={handleClaimRewards}>
-        Claim Rewards
+      <Button variant="success" onClick={handleClaimRewards} disabled={isPending || isConfirming}>
+        {isPending ? 'Claiming...' : isConfirming ? 'Confirming...' : 'Claim Rewards'}
       </Button>
       <TransactionStatus
         isPending={isPending}

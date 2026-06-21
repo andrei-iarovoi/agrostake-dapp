@@ -110,9 +110,9 @@ export function UnstakeForm() {
       <Button
         variant="danger"
         onClick={handleUnstake}
-        disabled={!isValidAmount || !hasEnoughStaked}
+        disabled={!!error || isPending || isConfirming}
       >
-        Unstake
+        {isPending ? 'Unstaking...' : isConfirming ? 'Confirming...' : 'Unstake'}
       </Button>
       {amount && Number(amount) <= 0 && (
         <p className="text-sm text-red-400">Amount must be greater than 0</p>

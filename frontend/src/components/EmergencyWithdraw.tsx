@@ -52,8 +52,12 @@ export function EmergencyWithdraw() {
     >
       <p className="text-sm text-red-400">⚠️ Withdraw instantly and forfeit pending rewards.</p>
 
-      <Button variant="danger" onClick={handleEmergencyWithdraw}>
-        Emergency Withdraw
+      <Button
+        variant="danger"
+        onClick={handleEmergencyWithdraw}
+        disabled={isPending || isConfirming}
+      >
+        {isPending ? 'Withdrawing...' : isConfirming ? 'Confirming...' : 'Emergency Withdraw'}
       </Button>
 
       <TransactionStatus
