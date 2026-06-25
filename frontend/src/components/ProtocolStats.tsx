@@ -11,7 +11,7 @@ import { StatCard } from './ui/StarCard';
 import { BarChart3 } from 'lucide-react';
 
 export function ProtocolStats() {
-  const { data: stats, isLoading } = useReadContract({
+  const { data: stats, isLoading: isAprLoading } = useReadContract({
     address: AGRO_STAKING_ADDRESS,
     abi: agroStakingAbi,
     functionName: 'getProtocolStats',
@@ -19,10 +19,6 @@ export function ProtocolStats() {
       refetchInterval: 5000,
     },
   });
-
-  if (isLoading) {
-    return <p className="text-slate-400">Loading protocol stats...</p>;
-  }
 
   return (
     <div>
@@ -36,24 +32,28 @@ export function ProtocolStats() {
           icon={<TrendingUp size={16} />}
           label="APR"
           value={`${stats?.apr.toString() ?? '0'}%`}
+          loading={isAprLoading}
         />
 
         <StatCard
           icon={<Coins size={16} />}
           label="TVL"
           value={`${stats ? formatTokenAmount(stats.totalStaked) : '0'} AGRO`}
+          loading={isAprLoading}
         />
 
         <StatCard
           icon={<Users size={16} />}
           label="Total Stakers"
           value={stats?.totalStakers.toString() ?? '0'}
+          loading={isAprLoading}
         />
 
         <StatCard
           icon={<Wallet size={16} />}
           label="Reward Pool"
           value={`${stats ? formatTokenAmount(stats.rewardPoolBalance) : '0'} AGRO`}
+          loading={isAprLoading}
         />
       </div>
     </div>

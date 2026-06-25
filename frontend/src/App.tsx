@@ -15,6 +15,7 @@ import { useAccount, useReadContract } from 'wagmi';
 
 import { AGRO_STAKING_ADDRESS } from './contracts/addresses';
 import { agroStakingAbi } from './contracts/agroStaking';
+import cornLogo from '../public/favicon.png';
 
 function App() {
   const { address } = useAccount();
@@ -30,21 +31,27 @@ function App() {
   return (
     <main className="min-h-screen bg-[#08100d] text-white">
       <div className="mx-auto max-w-5xl px-4 py-8">
-        <header className="relative overflow-hidden rounded-3xl mb-10">
+        <header className="relative mb-10 overflow-hidden rounded-3xl">
           <img
             src={agroBg}
-            alt="Agro background"
+            alt="Background"
             className="absolute inset-0 h-full w-full object-cover"
           />
 
           <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-slate-950/80" />
 
           <div className="relative z-10 flex flex-col items-center gap-6 px-8 py-20">
-            <h1 className="text-5xl font-bold">🌾 AgroStake</h1>
+            <div className="relative flex justify-center items-center">
+              <img
+                src={cornLogo}
+                alt="AgroStake Logo"
+                className="absolute right-full mr-0 h-28 w-28 object-contain"
+              />
 
-            <p className="mt-2 text-lg text-slate-300">
-              Decentralized Agricultural Staking Protocol
-            </p>
+              <h1 className="text-6xl font-bold">AgroStake</h1>
+            </div>
+
+            <p className="text-lg text-slate-300">Decentralized Agricultural Staking Protocol</p>
 
             <ConnectWallet />
           </div>

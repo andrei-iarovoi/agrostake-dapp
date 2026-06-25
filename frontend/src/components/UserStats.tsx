@@ -14,7 +14,7 @@ import { StatCard } from './ui/StarCard';
 export function UserStats() {
   const { address, isConnected } = useAccount();
 
-  const { data: balance } = useReadContract({
+  const { data: balance, isLoading: isBalanceLoading } = useReadContract({
     address: AGRO_TOKEN_ADDRESS,
     abi: agroTokenAbi,
     functionName: 'balanceOf',
@@ -25,7 +25,7 @@ export function UserStats() {
     },
   });
 
-  const { data: stakeInfo } = useReadContract({
+  const { data: stakeInfo, isLoading: StakeLoading } = useReadContract({
     address: AGRO_STAKING_ADDRESS,
     abi: agroStakingAbi,
     functionName: 'getStakeInfo',
@@ -36,7 +36,7 @@ export function UserStats() {
     },
   });
 
-  const { data: pendingRewards } = useReadContract({
+  const { data: pendingRewards, isLoading: isRewardLoading } = useReadContract({
     address: AGRO_STAKING_ADDRESS,
     abi: agroStakingAbi,
     functionName: 'pendingRewards',
@@ -63,24 +63,28 @@ export function UserStats() {
           icon={<Wallet size={16} />}
           label="Wallet Balance"
           value={`${balance ? formatTokenAmount(balance) : '0'} AGRO`}
+          loading={isBalanceLoading}
         />
 
         <StatCard
           icon={<Coins size={16} />}
           label="Staked Amount"
           value={`${stakeInfo ? formatTokenAmount(stakeInfo.amount) : '0'} AGRO`}
+          loading={StakeLoading}
         />
 
         <StatCard
           icon={<Gift size={16} />}
           label="Claimed Rewards"
           value={`${stakeInfo ? formatTokenAmount(stakeInfo.rewardsClaimed) : '0'} AGRO`}
+          loading={isRewardLoading}
         />
 
         <StatCard
           icon={<Clock3 size={16} />}
           label="Pending Rewards"
           value={`${pendingRewards ? formatTokenAmount(pendingRewards) : '0'} AGRO`}
+          loading={isRewardLoading}
         />
       </div>
     </div>
