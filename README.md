@@ -32,6 +32,8 @@ AgroStake is a decentralized staking protocol deployed on Ethereum Sepolia. User
 
 ## 🚀 Live Demo
 
+https://agrostake-dapp.vercel.app/
+
 ---
 
 ## 📸 Screenshots
