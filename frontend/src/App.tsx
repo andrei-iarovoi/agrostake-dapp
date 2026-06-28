@@ -16,6 +16,7 @@ import { useAccount, useReadContract } from 'wagmi';
 import { AGRO_STAKING_ADDRESS } from './contracts/addresses';
 import { agroStakingAbi } from './contracts/agroStaking';
 import cornLogo from '../public/favicon.png';
+import { Footer } from './components/Footer';
 
 function App() {
   const { address } = useAccount();
@@ -95,6 +96,7 @@ function App() {
           </section>
         )}
       </div>
+      <Footer />
     </main>
   );
 }
