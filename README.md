@@ -1,6 +1,6 @@
 <p align="center">
 
-<img src="./assets/main.png" width="120" alt="AgroStake Logo"/>
+<img src="./assets/main.png" alt="AgroStake Banner"/>
 
 <p>
 Decentralized Agricultural Staking Protocol
