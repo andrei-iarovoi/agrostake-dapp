@@ -88,12 +88,6 @@ export function OwnerPanel() {
 
   const { address } = useAccount();
 
-  const { data: owner } = useReadContract({
-    address: AGRO_STAKING_ADDRESS,
-    abi: agroStakingAbi,
-    functionName: 'owner',
-  });
-
   const { data: poolAllowance } = useReadContract({
     address: AGRO_TOKEN_ADDRESS,
     abi: agroTokenAbi,

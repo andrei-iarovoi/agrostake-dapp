@@ -1,4 +1,4 @@
-import { BarChart3, User, Zap, ShieldCheck } from 'lucide-react';
+import { Zap, ShieldCheck } from 'lucide-react';
 
 import { ConnectWallet } from './components/ConnectWallet';
 import { ProtocolStats } from './components/ProtocolStats';

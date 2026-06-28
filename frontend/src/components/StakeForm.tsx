@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { parseEther, formatEther } from 'viem';
+import { parseEther } from 'viem';
 import { useWaitForTransactionReceipt, useWriteContract, useAccount, useReadContract } from 'wagmi';
 
 import { AGRO_TOKEN_ADDRESS, AGRO_STAKING_ADDRESS } from '../contracts/addresses';

@@ -29,10 +29,6 @@ export function UnstakeForm() {
     },
   });
 
-  const parsedAmount = amount && Number(amount) > 0 ? parseEther(amount) : 0n;
-
-  const hasEnoughStaked = stakeInfo !== undefined && parsedAmount <= stakeInfo.amount;
-
   const { data: hash, writeContract, isPending, error } = useWriteContract();
 
   const receipt = useWaitForTransactionReceipt({
@@ -64,8 +60,6 @@ export function UnstakeForm() {
 
     setAmount((Number(stakeInfo.amount) / 1e18).toFixed(2));
   }
-
-  const isValidAmount = Number(amount) > 0;
 
   function handleUnstake() {
     if (!amount || Number(amount) <= 0) return;

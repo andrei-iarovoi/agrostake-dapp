@@ -6,7 +6,13 @@ type TransactionStatusProps = {
   hash?: string;
 };
 
-export function TransactionStatus({ isPending, isConfirming, isSuccess, error, hash }: Props) {
+export function TransactionStatus({
+  isPending,
+  isConfirming,
+  isSuccess,
+  error,
+  hash,
+}: TransactionStatusProps) {
   if (isPending) {
     return <p className="text-sm text-amber-400">⏳ Waiting for wallet confirmation...</p>;
   }

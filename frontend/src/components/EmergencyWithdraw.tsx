@@ -4,7 +4,7 @@ import { AGRO_STAKING_ADDRESS } from '../contracts/addresses';
 import { agroStakingAbi } from '../contracts/agroStaking';
 import { Button } from './ui/Button';
 import { TransactionStatus } from './ui/TransactionStatus';
-import { AlertTriangle, TriangleAlert } from 'lucide-react';
+import { AlertTriangle } from 'lucide-react';
 import { ActionCard } from './ui/ActionCard';
 import { useTransactionToast } from '../hooks/useTransactionToast';
 
