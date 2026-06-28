@@ -1,21 +1,23 @@
 <p align="center">
+  <img src="./assets/main.png" alt="AgroStake Banner"/>
+</p>
 
-<img src="./assets/main.png" alt="AgroStake Banner"/>
+<h1 align="center">🌽 AgroStake</h1>
 
-<p>
+<p align="center">
 Decentralized Agricultural Staking Protocol
 </p>
 
-<p>
+<p align="center">
 <strong>Built with Solidity • Foundry • React • Viem • Wagmi</strong>
 </p>
 
+<p align="center">
 <img src="https://img.shields.io/badge/Solidity-0.8.x-blue" />
 <img src="https://img.shields.io/badge/Foundry-Framework-orange" />
 <img src="https://img.shields.io/badge/React-19-blue" />
 <img src="https://img.shields.io/badge/TypeScript-5-blue" />
 <img src="https://img.shields.io/badge/License-MIT-green" />
-
 </p>
 
 ---
